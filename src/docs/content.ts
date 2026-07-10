@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "console"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "console"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -199,6 +199,24 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Customizing" },
       { p: "Override the whole thing from your HTTP kernel with `onError()`, or override the protected `renderException(err, c)` to change just the presentation." },
       { code: 'this.onError((err, c) => {\n  // report to your logging service, then render\n  return c.json({ oops: true }, 500);\n});' },
+    ],
+  },
+
+  validation: {
+    title: "Validation",
+    summary: "Parse request input against a schema; invalid input becomes an automatic 422.",
+    blocks: [
+      { p: "`validate()` parses input and returns typed data. On failure it throws a `ValidationException` that the kernel renders as a 422 with per-field errors — no manual checking." },
+      { p: "It's schema-agnostic: any [Zod](https://zod.dev)-style `safeParse` schema works, so the framework never bundles a validation library. Install Zod in your app:" },
+      { code: "npm install zod" },
+      { h: "Validating a body" },
+      { p: "Call `validate(schema)` with no data and it parses the JSON body, fully typed from the schema:" },
+      { code: 'import { json, validate } from "@shaferllc/keel/core";\nimport { z } from "zod";\n\nconst NewUser = z.object({\n  email: z.string().email(),\n  age: z.number().min(18),\n});\n\nasync store() {\n  const data = await validate(NewUser); // { email: string; age: number }\n  return json({ created: data.email }, 201);\n}' },
+      { p: "Invalid input never reaches your logic:" },
+      { code: '// POST /users  { "email": "nope", "age": 15 }\n{\n  "error": "The given data was invalid.",\n  "status": 422,\n  "errors": {\n    "email": ["Invalid email address"],\n    "age": ["Too small: expected number to be >=18"]\n  }\n}' },
+      { h: "Validating other input" },
+      { p: "Pass data explicitly to validate query strings, params, or anything else:" },
+      { code: 'const { q, page } = validate(Search, request.query());' },
     ],
   },
 
