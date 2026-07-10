@@ -216,6 +216,24 @@ const SCRIPT = `
   });
 `;
 
+/** The shared top navigation, so every page's menu stays identical. */
+export const SiteNav: FC<{ version: string; repo: string }> = ({ version, repo }) => (
+  <header class="bar">
+    <div class="wrap row">
+      <a class="brand" href="/">
+        <b>Keel</b>
+        <span class="no">v{version}</span>
+      </a>
+      <nav>
+        <a class="hidesm" href="/#spec">Spec</a>
+        <a class="hidesm" href="/#lifecycle">Lifecycle</a>
+        <a href="/docs">Docs</a>
+        <a class="gh" href={repo}>GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+);
+
 export const Layout: FC<
   PropsWithChildren<{ title: string; description: string; url?: string }>
 > = ({ title, description, url, children }) => (

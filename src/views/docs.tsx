@@ -1,7 +1,7 @@
 // @jsxRuntime automatic
 // @jsxImportSource hono/jsx
 import type { FC } from "hono/jsx";
-import { Layout } from "./layout.js";
+import { Layout, SiteNav } from "./layout.js";
 import type { AppInfo } from "../config.js";
 import { PAGES, GROUPS, ORDER, type Block } from "../docs/content.js";
 
@@ -53,19 +53,7 @@ export const DocsPage: FC<{ slug: string; app: AppInfo }> = ({ slug, app }) => {
       description={page.summary}
       url={`${app.url}/docs/${slug}`}
     >
-      <header class="bar">
-        <div class="wrap row">
-          <a class="brand" href="/">
-            <b>Keel</b>
-            <span class="no">v{app.version}</span>
-          </a>
-          <nav>
-            <a href="/docs">Docs</a>
-            <a class="hidesm" href="/#spec">Features</a>
-            <a class="gh" href={app.repo}>GitHub ↗</a>
-          </nav>
-        </div>
-      </header>
+      <SiteNav version={app.version} repo={app.repo} />
 
       <div class="wrap">
         <div class="docs">

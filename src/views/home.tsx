@@ -1,7 +1,7 @@
 // @jsxRuntime automatic
 // @jsxImportSource hono/jsx
 import type { FC } from "hono/jsx";
-import { Layout } from "./layout.js";
+import { Layout, SiteNav } from "./layout.js";
 import type { AppInfo } from "../config.js";
 
 /* ============================ hero schematic ============================ */
@@ -111,20 +111,7 @@ router.<span class="f">get</span>(<span class="s">"/"</span>, [HomeController, <
 
 export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
   <Layout title={`${app.name} — ${app.tagline}`} description={app.description} url={app.url}>
-    <header class="bar">
-      <div class="wrap row">
-        <a class="brand" href="/">
-          <b>Keel</b>
-          <span class="no">v{app.version}</span>
-        </a>
-        <nav>
-          <a class="hidesm" href="#spec">Spec</a>
-          <a class="hidesm" href="#lifecycle">Lifecycle</a>
-          <a href="/docs">Docs</a>
-          <a class="gh" href={app.repo}>GitHub ↗</a>
-        </nav>
-      </div>
-    </header>
+    <SiteNav version={app.version} repo={app.repo} />
 
     <div class="wrap">
       <section class="hero" style="border-top:none">
