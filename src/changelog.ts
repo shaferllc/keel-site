@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.16.0",
+    date: "2026-07-10",
+    title: "Events",
+    changes: [
+      "A tiny event emitter: emit(event, payload) and listen(event, fn) global helpers.",
+      "events() for once / off / listenerCount / clear.",
+      "Async listeners are awaited in registration order.",
+    ],
+  },
+  {
     version: "0.15.0",
     date: "2026-07-10",
     title: "Sessions",

@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "inertia", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -278,6 +278,19 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Validating other input" },
       { p: "Pass data explicitly to validate query strings, params, or anything else:" },
       { code: 'const { q, page } = validate(Search, request.query());' },
+    ],
+  },
+
+  events: {
+    title: "Events",
+    summary: "A tiny event emitter for decoupling — fire in one place, handle in another.",
+    blocks: [
+      { p: "The emitter is a container singleton, reached through the global `emit()` / `listen()` helpers. `emit()` awaits every listener in order." },
+      { code: 'listen("user.registered", (user) => {\n  sendWelcomeEmail(user);\n});\n\nawait emit("user.registered", user);' },
+      { p: "Register listeners in a provider's `boot()` so they wire up once at startup. `listen()` returns an unsubscribe function." },
+      { h: "The full API" },
+      { code: 'events().once("boot", () => {});\nevents().off("tick", listener);\nevents().listenerCount("tick");\nevents().clear();' },
+      { note: "Events are in-process. For durable or cross-process events, have a listener publish to your queue/broker." },
     ],
   },
 
