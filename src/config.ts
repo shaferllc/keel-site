@@ -7,6 +7,7 @@ export interface AppInfo {
   version: string;
   repo: string;
   docs: string;
+  starter: string;
 }
 
 /**
@@ -18,9 +19,10 @@ export const config: ConfigData = {
     name: "Keel",
     tagline: "The house framework for Node.js.",
     description:
-      "A real service container, service providers, expressive routing, JSX views, and a code-generating console — on a modern TypeScript stack.",
-    version: "0.2.0",
+      "A real service container, service providers, expressive routing, JSX views, and a code-generating console — on a modern TypeScript stack that runs on Node and the edge.",
+    version: "0.4.0",
     repo: "https://github.com/shaferllc/keel",
     docs: "https://github.com/shaferllc/keel/tree/main/docs",
+    starter: "https://github.com/shaferllc/keel-app",
   },
 };
