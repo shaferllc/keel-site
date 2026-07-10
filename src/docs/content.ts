@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "cache", "inertia", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "cache", "static", "inertia", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -178,8 +178,13 @@ export const PAGES: Record<string, DocPage> = {
       { p: "`request` also exposes `request.method`, `request.path`, `request.status`, `request.ip()`, and `request.raw`." },
       { h: "Cookies" },
       { code: 'request.cookie("session");   // one cookie\nrequest.cookie();            // all cookies\n\nresponse.cookie("session", token, { httpOnly: true });\nresponse.clearCookie("session");' },
+      { h: "File uploads" },
+      { p: "Uploaded files come back as web-standard `File` objects — edge-safe, no temp directory:" },
+      { code: 'const avatar = await request.file("avatar"); // File | undefined\nconst docs = await request.files("docs");     // File[]\nconst all = await request.allFiles();\nconst bytes = await avatar?.arrayBuffer();     // persist via R2/S3/fs' },
+      { h: "Content negotiation" },
+      { code: 'request.accepts(["application/json", "text/html"]);\nrequest.language(["en", "fr"]);\nrequest.types();' },
       { h: "Writing output" },
-      { code: 'response.json({ ok: true });\nresponse.send(anything);          // objects → JSON, else text\nresponse.status(201).json(created);\nresponse.cookie("flash", "saved").redirect("/");\nresponse.abort("Not found", 404); // throws an HttpException' },
+      { code: 'response.json({ ok: true });\nresponse.send(anything);          // objects → JSON, else text\nresponse.status(201).json(created);\nresponse.type("text/csv").append("vary", "accept");\nresponse.cookie("flash", "saved").redirect("/");\nresponse.abortIf(!user, "Not found", 404);' },
     ],
   },
 
@@ -305,6 +310,18 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Custom stores" },
       { p: "The default is in-memory (ephemeral, per-isolate). Implement `CacheStore` and bind your own `Cache` in a provider to persist to Redis/KV:" },
       { code: 'singleton(Cache, () => new Cache(new RedisStore()));' },
+    ],
+  },
+
+  static: {
+    title: "Static Files",
+    summary: "serveStatic() serves files from a directory before your routes, with caching and dot-file safety.",
+    blocks: [
+      { p: "Add the middleware to your HTTP kernel. Files map directly to URLs (`./public/css/app.css` → `/css/app.css`), and requests fall through to your routes when no file matches." },
+      { code: 'this.use(serveStatic());\nthis.use(serveStatic({ root: "./assets", maxAge: 86400, immutable: true }));' },
+      { p: "Every response carries `ETag` + `Last-Modified` (with `304` support). Dot-files (`.env`, `.git`) are 404'd by default and path traversal is blocked." },
+      { code: 'serveStatic({\n  dotFiles: "ignore",   // "deny" (403) | "allow"\n  headers: (path) => path.endsWith(".html") ? { "X-Frame-Options": "DENY" } : undefined,\n});' },
+      { note: "serveStatic() reads the filesystem (node:fs, loaded dynamically) — it's for Node apps. On Workers, serve assets via the platform binding. In production, prefer a CDN/reverse proxy." },
     ],
   },
 

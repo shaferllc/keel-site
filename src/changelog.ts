@@ -8,6 +8,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.19.0",
+    date: "2026-07-10",
+    title: "File uploads + request/response completeness",
+    changes: [
+      "File uploads: request.file()/files()/allFiles() return web File objects (edge-safe).",
+      "Content negotiation: request.accepts/types/language/languages.",
+      "request.hasBody()/headers()/ips(); response.type()/append()/removeHeader().",
+      "Guards: response.abortIf() / abortUnless().",
+    ],
+  },
+  {
+    version: "0.18.0",
+    date: "2026-07-10",
+    title: "Static file server",
+    changes: [
+      "serveStatic(options) serves ./public before routes.",
+      "ETag / Last-Modified / 304, Cache-Control (maxAge/immutable), dot-file policy, per-file headers, traversal guard.",
+      "node:fs loaded dynamically so the core still imports on the edge.",
+    ],
+  },
+  {
     version: "0.17.0",
     date: "2026-07-10",
     title: "Cache",
