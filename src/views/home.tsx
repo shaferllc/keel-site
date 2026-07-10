@@ -120,7 +120,7 @@ export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
         <nav>
           <a class="hidesm" href="#spec">Spec</a>
           <a class="hidesm" href="#lifecycle">Lifecycle</a>
-          <a href={app.docs}>Docs</a>
+          <a href="/docs">Docs</a>
           <a class="gh" href={app.repo}>GitHub ↗</a>
         </nav>
       </div>
@@ -262,7 +262,7 @@ export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
         <span>KEEL · v{app.version} · MIT · BUILT WITH KEEL, ON CLOUDFLARE WORKERS</span>
         <nav>
           <a href={app.repo}>GitHub</a>
-          <a href={app.docs}>Docs</a>
+          <a href="/docs">Docs</a>
           <a href={app.starter}>Starter</a>
           <a href="/health">/health</a>
         </nav>

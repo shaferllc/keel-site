@@ -1,7 +1,10 @@
 import type { Router } from "keel/core";
 import { SiteController } from "../Controllers/SiteController.js";
+import { DocsController } from "../Controllers/DocsController.js";
 
 export default function routes(router: Router): void {
   router.get("/", [SiteController, "home"]);
   router.get("/health", [SiteController, "health"]);
+  router.get("/docs", [DocsController, "index"]);
+  router.get("/docs/:slug", [DocsController, "show"]);
 }

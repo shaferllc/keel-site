@@ -154,7 +154,39 @@ const STYLES = `
   footer nav { display: flex; gap: 1.5rem; }
   footer nav a:hover { color: var(--accent); }
 
+  /* ---------- docs ---------- */
+  .docs { display: grid; grid-template-columns: 15rem 1fr; gap: 3.5rem; padding: 2.6rem 0 4rem; align-items: start; }
+  .docnav { position: sticky; top: 5.6rem; font-size: .9rem; }
+  .docnav .grp { margin-bottom: 1.6rem; }
+  .docnav .grp > span { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: .6rem; }
+  .docnav a { display: block; padding: .28rem 0 .28rem .8rem; color: var(--ink-2); border-left: 2px solid var(--rule); transition: color .12s, border-color .12s; }
+  .docnav a:hover { color: var(--ink); }
+  .docnav a.on { color: var(--accent-ink); border-left-color: var(--accent); font-weight: 600; }
+  .doc-main { min-width: 0; max-width: 44rem; }
+  .crumb { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .8rem; }
+  .doc-main h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -0.025em; margin: 0 0 .6rem; line-height: 1.05; }
+  .doc-lead { font-size: 1.15rem; color: var(--ink-2); margin: 0 0 2rem; padding-bottom: 1.6rem; border-bottom: 1px solid var(--rule); }
+  .doc-h { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; letter-spacing: -0.01em; margin: 2.4rem 0 .8rem; }
+  .doc-p { color: var(--ink); font-size: 1.02rem; margin: 0 0 1.1rem; }
+  .doc-p a, .doc-note a { color: var(--accent-ink); border-bottom: 1px solid var(--accent); }
+  .doc-p a:hover { color: var(--accent); }
+  .doc-p code, .doc-note code, .doc-list code { font-family: var(--mono); font-size: .86em; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 4px; padding: .06rem .3rem; }
+  .doc-list { margin: 0 0 1.2rem; padding-left: 1.1rem; }
+  .doc-list li { color: var(--ink); font-size: 1.02rem; margin-bottom: .5rem; }
+  .doc-list li::marker { color: var(--accent); }
+  .doc-note { border-left: 3px solid var(--accent); background: var(--panel); padding: .9rem 1.1rem; margin: 0 0 1.3rem; font-size: .96rem; color: var(--ink-2); }
+  .doc-code { border: 1px solid var(--ink); background: var(--panel); margin: 0 0 1.4rem; }
+  .doc-code .fn { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--rule); padding: .5rem .9rem; }
+  .doc-code pre { margin: 0; padding: 1.1rem 1.2rem; overflow-x: auto; font-family: var(--mono); font-size: .84rem; line-height: 1.75; color: var(--ink); }
+  .doc-foot { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; border-top: 1px solid var(--ink); padding-top: 1.4rem; }
+  .doc-foot a { font-family: var(--mono); font-size: .82rem; color: var(--ink-2); }
+  .doc-foot a:hover { color: var(--accent); }
+  .doc-foot .nx { text-align: right; }
+  .doc-foot .lb { display: block; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .2rem; }
+
   @media (max-width: 54rem) {
+    .docs { grid-template-columns: 1fr; gap: 1.5rem; }
+    .docnav { position: static; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
     .hero { grid-template-columns: 1fr; gap: 2.5rem; }
     .hero .figure { order: -1; max-width: 22rem; }
     .bp-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -165,6 +197,14 @@ const STYLES = `
     .bar nav a.hidesm { display: none; }
   }
 `;
+
+// Hull + vermilion keel mark, inlined as a data-URI favicon.
+const FAVICON =
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>" +
+  "<rect width='32' height='32' rx='7' fill='#15222c'/>" +
+  "<path d='M8 8 C8 20 12 25 16 25 C20 25 24 20 24 8' fill='none' stroke='#f2ede1' stroke-width='2.4' stroke-linecap='round'/>" +
+  "<path d='M13.6 24 L13.6 28 Q16 30.4 18.4 28 L18.4 24 Z' fill='#d5462a'/></svg>";
+const FAVICON_HREF = `data:image/svg+xml,${encodeURIComponent(FAVICON)}`;
 
 const SCRIPT = `
   document.querySelectorAll('[data-copy]').forEach(function(el){
@@ -191,6 +231,7 @@ export const Layout: FC<
       <meta property="og:type" content="website" />
       {url ? <meta property="og:url" content={url} /> : null}
       <meta name="theme-color" content="#f2ede1" />
+      <link rel="icon" href={FAVICON_HREF} />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
       <link
