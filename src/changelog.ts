@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.17.0",
+    date: "2026-07-10",
+    title: "Cache",
+    changes: [
+      "Memory-backed cache with TTLs: cache().get/put/has/forget/pull/flush.",
+      "remember(key, ttl, fn) and rememberForever(key, fn).",
+      "Pluggable via the CacheStore interface (swap in Redis/KV).",
+    ],
+  },
+  {
     version: "0.16.0",
     date: "2026-07-10",
     title: "Events",

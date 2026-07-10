@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "inertia", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "cache", "inertia", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -291,6 +291,20 @@ export const PAGES: Record<string, DocPage> = {
       { h: "The full API" },
       { code: 'events().once("boot", () => {});\nevents().off("tick", listener);\nevents().listenerCount("tick");\nevents().clear();' },
       { note: "Events are in-process. For durable or cross-process events, have a listener publish to your queue/broker." },
+    ],
+  },
+
+  cache: {
+    title: "Cache",
+    summary: "A small cache with TTLs and the remember pattern — memory-backed, pluggable stores.",
+    blocks: [
+      { code: 'await cache().put("user:1", user);       // forever\nawait cache().put("otp", code, 300);     // expires in 300s\nawait cache().get("user:1", fallback);\nawait cache().has("otp");\nawait cache().pull("otp");                // get + forget' },
+      { h: "remember" },
+      { p: "Return the cached value, or compute it, cache it, and return it:" },
+      { code: 'const stats = await cache().remember("stats", 60, async () => {\n  return computeExpensiveStats(); // runs only on a miss\n});' },
+      { h: "Custom stores" },
+      { p: "The default is in-memory (ephemeral, per-isolate). Implement `CacheStore` and bind your own `Cache` in a provider to persist to Redis/KV:" },
+      { code: 'singleton(Cache, () => new Cache(new RedisStore()));' },
     ],
   },
 
