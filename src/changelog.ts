@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.20.0",
+    date: "2026-07-10",
+    title: "Named middleware registry",
+    changes: [
+      "router.named({ auth, admin }) registers middleware by name.",
+      "Reference with .use(\"auth\") on routes, groups, and resources.",
+      "Names resolve at build time (unknown names throw); raw functions still work.",
+    ],
+  },
+  {
     version: "0.19.0",
     date: "2026-07-10",
     title: "File uploads + request/response completeness",

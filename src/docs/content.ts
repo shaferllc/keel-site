@@ -224,6 +224,9 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Writing middleware" },
       { p: "A middleware is an async function of `(c, next)`. Do work, `await next()` to continue down the stack, then optionally work on the way back up. Return a response without calling `next()` to short-circuit:" },
       { code: 'export const requireApiKey: MiddlewareHandler = async (c, next) => {\n  if (c.req.header("x-api-key") !== process.env.API_KEY) {\n    return c.json({ error: "Unauthorized" }, 401);\n  }\n  await next();\n};' },
+      { h: "Named middleware" },
+      { p: "Register middleware by name, then reference it by name on routes, groups, and resources — no importing the function everywhere. Unknown names throw when the app builds." },
+      { code: 'router.named({ auth, admin });\n\nrouter.get("/dashboard", handler).use("auth");\nrouter.group(() => { /* … */ }).use(["auth", "admin"]);\nrouter.resource("posts", Posts).use(["store", "update"], "auth");' },
     ],
   },
 
