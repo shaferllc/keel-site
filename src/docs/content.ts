@@ -127,8 +127,10 @@ export const PAGES: Record<string, DocPage> = {
       { list: [
         "`json(data, status?)` · `text()` · `html()` · `redirect()`",
         "`param(name)` · `query(name)` · `header(name)` · `body<T>()`",
-        "`request()` / `ctx()` — the raw Request / Hono context",
+        "`request.method` · `request.path` · `request.status` — flat request/response access",
       ] },
+      { p: "The `request` accessor is handy in middleware and logging:" },
+      { code: "`${request.method} ${request.path} → ${request.status} (${ms}ms)`" },
       { note: "Helpers are powered by async-context storage the kernel enables per request. Taking `c` explicitly still works." },
     ],
   },
