@@ -6,7 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "routes": [
-    { "pattern": "keeljs.com", "custom_domain": true },
+    { "pattern": "keeljs.com/*", "zone_name": "keeljs.com" },
     { "pattern": "www.keeljs.com", "custom_domain": true }
   ],
   "observability": {
