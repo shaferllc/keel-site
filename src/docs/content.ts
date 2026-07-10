@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "events", "cache", "static", "inertia", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "errors", "validation", "events", "cache", "static", "inertia", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -313,6 +313,18 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Custom stores" },
       { p: "The default is in-memory (ephemeral, per-isolate). Implement `CacheStore` and bind your own `Cache` in a provider to persist to Redis/KV:" },
       { code: 'singleton(Cache, () => new Cache(new RedisStore()));' },
+    ],
+  },
+
+  "url-builder": {
+    title: "URL Builder",
+    summary: "Generate URLs from named routes — with query strings and tamper-proof signed URLs.",
+    blocks: [
+      { code: 'router.get("/users/:id", [Users, "show"]).name("users.show");\nrouter.url("users.show", { id: 42 });\n// "/users/42"\nrouter.url("users.show", { id: 42 }, { qs: { tab: "posts" } });\n// "/users/42?tab=posts"' },
+      { h: "Signed URLs" },
+      { p: "A signed URL carries a tamper-proof signature — great for one-off links (confirmations, downloads). Signing uses `config('app.key')` and Web Crypto, so it works on Node and the edge." },
+      { code: 'const url = await router.signedUrl("download", { id: 7 });\nconst expiring = await router.signedUrl("download", { id: 7 }, { expiresIn: 3600 });\n\n// verify the incoming request\nif (!(await router.hasValidSignature())) {\n  return response.abort("Invalid or expired link", 403);\n}' },
+      { note: "Signatures cover the path + query string; changing any parameter invalidates the link. Set APP_KEY to a long random secret." },
     ],
   },
 

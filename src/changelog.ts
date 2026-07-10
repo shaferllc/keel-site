@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.21.0",
+    date: "2026-07-10",
+    title: "URL builder + signed URLs",
+    changes: [
+      "router.url(name, params, { qs }) query-string support.",
+      "Signed URLs: router.signedUrl() (HMAC-SHA256 via Web Crypto, keyed by config('app.key'), expiresIn).",
+      "router.hasValidSignature() verifies the current request. Edge-safe.",
+    ],
+  },
+  {
     version: "0.20.0",
     date: "2026-07-10",
     title: "Named middleware registry",
