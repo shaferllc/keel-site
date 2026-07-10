@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "console"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -225,6 +225,26 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Validating other input" },
       { p: "Pass data explicitly to validate query strings, params, or anything else:" },
       { code: 'const { q, page } = validate(Search, request.query());' },
+    ],
+  },
+
+  inertia: {
+    title: "Inertia",
+    summary: "A server-side Inertia.js adapter — render page components without building an API.",
+    blocks: [
+      { p: "Pair Keel's routing with an Inertia client (React/Vue/Svelte) and render pages from the server. `inertia(\"Page\", props)` returns the right response automatically — full HTML on first load, the JSON page object on XHR navigations." },
+      { h: "Configure it" },
+      { p: "Bind an `Inertia` instance in a provider with a root view (the HTML shell) and an asset version:" },
+      { code: 'singleton(Inertia, () => new Inertia({\n  version: "1",\n  rootView: (page) =>\n    `<!DOCTYPE html><div id="app" ` +\n    `data-page="${inertiaPageAttr(page)}"></div>` +\n    `<script src="/assets/app.js"></script>`,\n}));' },
+      { h: "Render a page" },
+      { code: 'show() {\n  return inertia("Users/Show", { user });\n}\n\n// or straight from a route\nrouter.on("/dashboard").renderInertia("Dashboard", { title });' },
+      { h: "The protocol, handled for you" },
+      { list: [
+        "First visit → the full HTML document from your root view",
+        "Inertia navigation (`X-Inertia`) → `{ component, props, url, version }` JSON",
+        "Asset version changed → `409` + `X-Inertia-Location` (client hard-reloads)",
+        "Partial reload → only the requested props",
+      ] },
     ],
   },
 
