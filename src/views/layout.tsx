@@ -110,7 +110,7 @@ const STYLES = `
   .cmd button:hover { color: var(--accent); border-color: var(--accent); }
 
   /* ---------- code window ---------- */
-  .window { max-width: 50rem; margin: 3.5rem auto 0; border-radius: var(--radius); border: 1px solid var(--border); background: linear-gradient(180deg, var(--panel-2), var(--panel)); box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); overflow: hidden; }
+  .window { text-align: left; max-width: 50rem; margin: 3.5rem auto 0; border-radius: var(--radius); border: 1px solid var(--border); background: linear-gradient(180deg, var(--panel-2), var(--panel)); box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); overflow: hidden; }
   .window .top { display: flex; align-items: center; gap: .5rem; padding: .8rem 1rem; border-bottom: 1px solid var(--border-soft); }
   .window .top .lights { display: flex; gap: .45rem; }
   .window .top .lights i { width: .72rem; height: .72rem; border-radius: 50%; display: block; }
@@ -142,7 +142,7 @@ const STYLES = `
   .repo a.link:hover { text-decoration: underline; }
 
   /* ---------- quickstart ---------- */
-  .terminal { max-width: 40rem; margin: 0 auto; border-radius: var(--radius); border: 1px solid var(--border); background: var(--code-bg); overflow: hidden; }
+  .terminal { text-align: left; max-width: 40rem; margin: 0 auto; border-radius: var(--radius); border: 1px solid var(--border); background: var(--code-bg); overflow: hidden; }
   .terminal .top { padding: .7rem 1rem; border-bottom: 1px solid var(--border-soft); display: flex; gap: .45rem; }
   .terminal .top i { width: .72rem; height: .72rem; border-radius: 50%; background: #2a3350; }
   .terminal pre { font-size: .9rem; padding: 1.3rem 1.5rem; }
