@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.27.0",
+    date: "2026-07-10",
+    title: "Authentication",
+    changes: [
+      "Session-based auth: auth().login/logout/check/guest/id/user.",
+      "Pluggable user provider via setUserProvider().",
+      "authGuard({ redirectTo? }) middleware (401 or redirect). Built on session + hash.",
+    ],
+  },
+  {
     version: "0.26.0",
     date: "2026-07-10",
     title: "Structured logger",

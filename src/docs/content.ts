@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "authentication", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "architecture"] },
 ];
@@ -199,6 +199,21 @@ export const PAGES: Record<string, DocPage> = {
       { p: "Flash data survives exactly one request — perfect for post-redirect messages:" },
       { code: 'session().flash("status", "Saved!");\nreturn redirect("/profile");\n\n// next request\nsession().flashed("status"); // "Saved!"' },
       { note: "Cookie-backed, so keep sessions small (~4KB). For larger sessions, write a middleware that persists to a store and stashes the data on the context the same way." },
+    ],
+  },
+
+  authentication: {
+    title: "Authentication",
+    summary: "Session-based auth built on the session + hash primitives — login, guards, and a pluggable user provider.",
+    blocks: [
+      { p: "Requires `sessionMiddleware()`. Register a user provider once (in a provider), then verify passwords with `hash` and `login()` the user's id." },
+      { code: 'setUserProvider((id) => db.users.find(id));' },
+      { code: 'const user = await db.users.findByEmail(email);\nif (!user || !(await hash.verify(user.password, password))) {\n  return response.abort("Invalid credentials", 401);\n}\nauth().login(user.id);' },
+      { h: "Reading the user" },
+      { code: 'auth().check();        // logged in?\nauth().id();           // user id or null\nawait auth().user();   // full user via your provider\nauth().logout();' },
+      { h: "Protecting routes" },
+      { p: "`authGuard()` rejects unauthenticated requests (401, or a redirect). Register it as named middleware:" },
+      { code: 'router.named({ auth: authGuard({ redirectTo: "/login" }) });\nrouter.get("/dashboard", [Dashboard, "index"]).use("auth");' },
     ],
   },
 
