@@ -183,8 +183,22 @@ const STYLES = `
   .doc-foot a:hover { color: var(--accent); }
   .doc-foot .nx { text-align: right; }
   .doc-foot .lb { display: block; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .2rem; }
+  .lnk { color: var(--accent-ink); border-bottom: 1px solid var(--accent); }
+  .lnk:hover { color: var(--accent); }
+
+  /* ---------- changelog ---------- */
+  .log { border-top: 1px solid var(--ink); }
+  .rel { display: grid; grid-template-columns: 12rem 1fr; gap: 2rem; padding: 1.8rem 0; border-bottom: 1px solid var(--rule); }
+  .rel-meta { display: flex; flex-direction: column; gap: .3rem; }
+  .rel-meta .ver { font-family: var(--serif); font-size: 1.5rem; color: var(--accent); }
+  .rel-meta .date { font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: var(--ink-3); }
+  .rel-body h3 { font-family: var(--serif); font-weight: 500; font-size: 1.2rem; margin: 0 0 .6rem; }
+  .rel-body ul { margin: 0; padding-left: 1.1rem; }
+  .rel-body li { color: var(--ink-2); font-size: .96rem; margin-bottom: .4rem; }
+  .rel-body li::marker { color: var(--accent); }
 
   @media (max-width: 54rem) {
+    .rel { grid-template-columns: 1fr; gap: .6rem; }
     .docs { grid-template-columns: 1fr; gap: 1.5rem; }
     .docnav { position: static; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
     .hero { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -228,6 +242,7 @@ export const SiteNav: FC<{ version: string; repo: string }> = ({ version, repo }
         <a class="hidesm" href="/#spec">Spec</a>
         <a class="hidesm" href="/#lifecycle">Lifecycle</a>
         <a href="/docs">Docs</a>
+        <a class="hidesm" href="/changelog">Changelog</a>
         <a class="gh" href={repo}>GitHub ↗</a>
       </nav>
     </div>
