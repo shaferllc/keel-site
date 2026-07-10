@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "static", "inertia", "debugging", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -351,6 +351,18 @@ export const PAGES: Record<string, DocPage> = {
       { p: "A signed URL carries a tamper-proof signature — great for one-off links (confirmations, downloads). Signing uses `config('app.key')` and Web Crypto, so it works on Node and the edge." },
       { code: 'const url = await router.signedUrl("download", { id: 7 });\nconst expiring = await router.signedUrl("download", { id: 7 }, { expiresIn: 3600 });\n\n// verify the incoming request\nif (!(await router.hasValidSignature())) {\n  return response.abort("Invalid or expired link", 403);\n}' },
       { note: "Signatures cover the path + query string; changing any parameter invalidates the link. Set APP_KEY to a long random secret." },
+    ],
+  },
+
+  logger: {
+    title: "Logger",
+    summary: "A leveled logger with structured JSON output and child loggers.",
+    blocks: [
+      { p: "Reach it with the global `logger()` helper. The second argument is structured context — merged into the log line, not concatenated." },
+      { code: 'logger().info("user registered", { userId: user.id });\nlogger().warn("cache miss", { key });\nlogger().error("payment failed", { orderId });\n// {"level":"info","time":"…","msg":"user registered","userId":42}' },
+      { p: "Levels: `debug` < `info` < `warn` < `error`. Set the threshold via `config('logger.level')`; pretty output turns on when `app.debug` is true." },
+      { h: "Child loggers" },
+      { code: 'const log = logger().child({ requestId });\nlog.info("handling");  // includes requestId on every line' },
     ],
   },
 

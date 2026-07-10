@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.26.0",
+    date: "2026-07-10",
+    title: "Structured logger",
+    changes: [
+      "logger().debug/info/warn/error with structured JSON output (pretty in debug).",
+      "Level threshold from config('logger.level').",
+      "logger().child({ … }) for bound fields (request ids, etc.).",
+    ],
+  },
+  {
     version: "0.25.0",
     date: "2026-07-10",
     title: "Rate limiter",
