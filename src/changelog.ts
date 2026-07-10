@@ -8,6 +8,49 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.14.0",
+    date: "2026-07-10",
+    title: "Request input, cookies, response helpers",
+    changes: [
+      "request.all() / input() / only() / except() merge query + parsed body; request.ip().",
+      "Cookies: request.cookie(), response.cookie() / clearCookie().",
+      "response.send() (objects → JSON, else text) and response.abort() (throws HttpException).",
+    ],
+  },
+  {
+    version: "0.13.0",
+    date: "2026-07-10",
+    title: "Controllers",
+    changes: [
+      "Single-action controllers: [Controller] calls handle().",
+      "Lazy-loaded controllers: [() => import(...), method] imported on first hit.",
+      "Richer resources: .as() / .params() / .use(actions, mw); nested resources (posts.comments → /posts/:post_id/comments/:id).",
+      "make:controller --resource generates all seven RESTful actions.",
+    ],
+  },
+  {
+    version: "0.12.0",
+    date: "2026-07-10",
+    title: "Inertia + domain routing",
+    changes: [
+      "Inertia.js server adapter: inertia(\"Page\", props) + on().renderInertia(); X-Inertia negotiation, version 409s, partial reloads.",
+      "Domain / subdomain routing: .domain(pattern), host dispatch, request.subdomain().",
+      "Route matchers (number/uuid/slug/alpha), global router.where(), group .where().",
+      "Brisk helpers: on().renderInertia / redirectToPath / redirectToRoute(qs). request.route + request.routeIs(). .use() middleware alias.",
+    ],
+  },
+  {
+    version: "0.11.0",
+    date: "2026-07-10",
+    title: "First-class routing",
+    changes: [
+      "Named routes + router.url() URL generation.",
+      "Route groups: group(cb).prefix().middleware().as().",
+      "Resource routes: router.resource(name, Controller) with only/except/apiOnly.",
+      "Per-route .middleware() and .where() param constraints; on().redirect()/.render().",
+    ],
+  },
+  {
     version: "0.10.0",
     date: "2026-07-10",
     title: "Request validation",

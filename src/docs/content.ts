@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console", "architecture"] },
 ];
@@ -166,6 +166,20 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Resource controllers" },
       { code: "npm run keel make:controller Post --resource" },
       { note: "Wire them up with `router.resource(\"posts\", PostController)` — see Routing." },
+    ],
+  },
+
+  request: {
+    title: "Request & Response",
+    summary: "The full input/output surface — reading input, cookies, and writing responses without threading the context.",
+    blocks: [
+      { h: "Reading input" },
+      { code: 'request.param("id");            // route parameter\nrequest.query("q");             // query value\nrequest.header("authorization");\n\nawait request.all();            // query + parsed body\nawait request.input("email");   // one value, query or body\nawait request.input("page", 1); // with a fallback\nawait request.only(["email"]);  // a subset\nawait request.except(["password"]);' },
+      { p: "`request` also exposes `request.method`, `request.path`, `request.status`, `request.ip()`, and `request.raw`." },
+      { h: "Cookies" },
+      { code: 'request.cookie("session");   // one cookie\nrequest.cookie();            // all cookies\n\nresponse.cookie("session", token, { httpOnly: true });\nresponse.clearCookie("session");' },
+      { h: "Writing output" },
+      { code: 'response.json({ ok: true });\nresponse.send(anything);          // objects → JSON, else text\nresponse.status(201).json(created);\nresponse.cookie("flash", "saved").redirect("/");\nresponse.abort("Not found", 404); // throws an HttpException' },
     ],
   },
 
