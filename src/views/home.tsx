@@ -9,7 +9,7 @@ const FEATURES = [
   { ico: "🧩", title: "Service providers", body: "A register() → boot() lifecycle to configure the app in one place, with predictable ordering." },
   { ico: "🛣️", title: "Expressive routing", body: "Closures or [Controller, method] tuples resolved from the container, with full dependency injection." },
   { ico: "🖼️", title: "JSX views", body: "Type-safe Hono JSX components with layout composition. The same views run on Node and the edge." },
-  { ico: "⚙️", title: "Artisan-style console", body: "keel serve, keel routes, and make:controller / make:provider / make:middleware generators." },
+  { ico: "⚙️", title: "Code-generating console", body: "keel serve, keel routes, and make:controller / make:provider / make:middleware generators." },
   { ico: "☁️", title: "Edge-ready", body: "The core has no hard Node dependency, so a Keel app deploys to Cloudflare Workers — like this very site." },
 ];
 
@@ -62,8 +62,8 @@ export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
       <section id="features">
         <h2 class="section-title">Everything you reach for, none of the ceremony</h2>
         <p class="section-sub">
-          The ergonomics that make Laravel productive, on a modern TypeScript
-          stack. Small enough to read in an afternoon.
+          Batteries-included ergonomics on a modern TypeScript stack. Small
+          enough to read in an afternoon.
         </p>
         <div class="grid">
           {FEATURES.map((f) => (

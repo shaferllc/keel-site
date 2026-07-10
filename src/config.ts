@@ -16,9 +16,9 @@ export interface AppInfo {
 export const config: ConfigData = {
   app: {
     name: "Keel",
-    tagline: "A Laravel-flavored house framework for Node.js.",
+    tagline: "The house framework for Node.js.",
     description:
-      "A real service container, service providers, expressive routing, JSX views, and an artisan-style console — on a modern TypeScript stack.",
+      "A real service container, service providers, expressive routing, JSX views, and a code-generating console — on a modern TypeScript stack.",
     version: "0.2.0",
     repo: "https://github.com/shaferllc/keel",
     docs: "https://github.com/shaferllc/keel/tree/main/docs",
