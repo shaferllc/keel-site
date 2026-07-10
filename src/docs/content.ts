@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "sessions", "authentication", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "hono", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -461,6 +461,27 @@ export const PAGES: Record<string, DocPage> = {
       { p: "Your app ships its own console at `bin/console.ts`, so it's yours to extend." },
       { code: "npm run keel routes                 # list routes\nnpm run keel serve --port 8080      # start the server\nnpm run keel make:controller Post   # -> app/Controllers/PostController.ts\nnpm run keel make:provider Billing  # -> app/Providers/BillingServiceProvider.ts\nnpm run keel make:middleware Auth   # -> app/Http/Middleware/authMiddleware.ts" },
       { p: "Generators refuse to overwrite an existing file. Because commands boot the application, they get the same container, config, and providers your HTTP requests do." },
+    ],
+  },
+
+  hono: {
+    title: "Built on Hono",
+    summary: "Keel's HTTP layer is Hono — everything Hono can do is available to you underneath.",
+    blocks: [
+      { p: "Keel's helpers (`json()`, `param()`, `request`, `response`, `view()`) are thin wrappers over Hono's context. You can always take the context (`c`) directly and use the full Hono API — `Keel`'s `Ctx` type is exactly Hono's `Context`." },
+      { code: 'router.get("/users/:id", (c) => {\n  c.req.param("id");\n  c.req.header("authorization");\n  return c.json({ ok: true }); // c.text/c.html/c.body/c.redirect\n});' },
+      { h: "Hono middleware works as-is" },
+      { p: "Any Hono middleware — built-in or third-party — drops straight into the kernel or onto a route, because Keel middleware is Hono middleware:" },
+      { code: 'import { cors } from "hono/cors";\nimport { secureHeaders } from "hono/secure-headers";\n\nthis.use(cors());\nthis.use(secureHeaders());' },
+      { p: "Hono ships CORS, Secure Headers, Body Limit, Cache, Compress, ETag, Basic/Bearer Auth, JWT, Logger, and more." },
+      { h: "What else you get" },
+      { list: [
+        "JSX (hono/jsx) — Keel views are Hono JSX",
+        "Cookies (hono/cookie), streaming & SSE (hono/streaming), WebSockets",
+        "Testing via hono.request() — what Keel's own test suite uses",
+        "Validators, the hc typed RPC client, and runtime adapters (Node/Workers/Deno/Bun/Lambda)",
+      ] },
+      { note: "For anything HTTP-layer Keel doesn't wrap yet, drop down to Hono — hono.dev/docs applies directly." },
     ],
   },
 
