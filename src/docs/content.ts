@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "errors", "validation", "events", "cache", "static", "inertia", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "errors", "validation", "events", "cache", "static", "inertia", "debugging", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -265,6 +265,14 @@ export const PAGES: Record<string, DocPage> = {
         "`app.debug` off → internals hidden for unexpected 500s",
         "Unmatched routes → a tidy automatic 404",
       ] },
+      { h: "Custom exceptions" },
+      { p: "Extend `HttpException` for your domain errors. Add a `code`, and optionally make the exception render or report itself:" },
+      { code: 'export class PaymentRequiredException extends HttpException {\n  code = "E_PAYMENT_REQUIRED";\n  constructor() { super(402, "Payment required."); }\n  handle(c) { return c.json({ error: this.message, upgrade: "/billing" }, this.status); }\n  report() { metrics.increment("payment_required"); }\n}' },
+      { list: [
+        "`code` → added to the JSON body ({ error, status, code })",
+        "`handle(c)` → if it returns a Response, the kernel uses it",
+        "`report()` → awaited before rendering (logging/metrics), never masks the error",
+      ] },
       { h: "Customizing" },
       { p: "Override the whole thing from your HTTP kernel with `onError()`, or override the protected `renderException(err, c)` to change just the presentation." },
       { code: 'this.onError((err, c) => {\n  // report to your logging service, then render\n  return c.json({ oops: true }, 500);\n});' },
@@ -357,6 +365,19 @@ export const PAGES: Record<string, DocPage> = {
         "Asset version changed → `409` + `X-Inertia-Location` (client hard-reloads)",
         "Partial reload → only the requested props",
       ] },
+    ],
+  },
+
+  debugging: {
+    title: "Debugging",
+    summary: "dump() and dd() — for the moments you'd reach for console.log.",
+    blocks: [
+      { p: "`dump(...values)` prints to the console and returns its first argument, so you can drop it inline:" },
+      { code: 'dump(user, order);                  // logs, keeps going\nconst total = dump(computeTotal()); // logs AND returns it' },
+      { h: "dd — dump and die" },
+      { p: "`dd(...values)` dumps to the browser and halts the request — a readable page with each value pretty-printed. It throws a self-rendering exception, so it works the same on Node and the edge." },
+      { code: 'store() {\n  dd(await request.all(), request.headers());\n  // never reached\n}' },
+      { note: "Set APP_DEBUG=true for full framework error pages with stack traces; turn it off in production." },
     ],
   },
 

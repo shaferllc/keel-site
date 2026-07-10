@@ -8,6 +8,25 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.23.0",
+    date: "2026-07-10",
+    title: "Debugging: dump & dd",
+    changes: [
+      "dump(...values) logs to the console and returns its first argument.",
+      "dd(...values) renders values in the browser and halts the request (self-rendering exception).",
+      "Both edge-safe.",
+    ],
+  },
+  {
+    version: "0.22.0",
+    date: "2026-07-10",
+    title: "Self-handling exceptions + error codes",
+    changes: [
+      "Exceptions with handle(c) render themselves; report() is awaited before rendering.",
+      "HttpException.code included in the JSON error body.",
+    ],
+  },
+  {
     version: "0.21.0",
     date: "2026-07-10",
     title: "URL builder + signed URLs",
