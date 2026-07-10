@@ -173,17 +173,19 @@ const SCRIPT = `
 `;
 
 export const Layout: FC<
-  PropsWithChildren<{ title: string; description: string }>
-> = ({ title, description, children }) => (
+  PropsWithChildren<{ title: string; description: string; url?: string }>
+> = ({ title, description, url, children }) => (
   <html lang="en">
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>{title}</title>
       <meta name="description" content={description} />
+      {url ? <link rel="canonical" href={url} /> : null}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
+      {url ? <meta property="og:url" content={url} /> : null}
       <meta name="theme-color" content="#05070d" />
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
     </head>

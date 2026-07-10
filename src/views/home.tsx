@@ -43,7 +43,7 @@ const REPOS = (app: AppInfo) => [
 ];
 
 export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
-  <Layout title={`${app.name} — ${app.tagline}`} description={app.description}>
+  <Layout title={`${app.name} — ${app.tagline}`} description={app.description} url={app.url}>
     <nav class="bar">
       <div class="wrap row">
         <a class="logo" href="/">
