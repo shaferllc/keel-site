@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.24.0",
+    date: "2026-07-10",
+    title: "Hashing + encryption",
+    changes: [
+      "hash.make/verify/needsRehash (PBKDF2-SHA256, timing-safe).",
+      "encryption.encrypt/decrypt (AES-GCM keyed by config('app.key'); decrypt returns null on tamper).",
+      "Both use Web Crypto — edge-safe, no native bindings.",
+    ],
+  },
+  {
     version: "0.23.0",
     date: "2026-07-10",
     title: "Debugging: dump & dd",

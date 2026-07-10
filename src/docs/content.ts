@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "errors", "validation", "events", "cache", "static", "inertia", "debugging", "console", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "static", "inertia", "debugging", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -321,6 +321,20 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Custom stores" },
       { p: "The default is in-memory (ephemeral, per-isolate). Implement `CacheStore` and bind your own `Cache` in a provider to persist to Redis/KV:" },
       { code: 'singleton(Cache, () => new Cache(new RedisStore()));' },
+    ],
+  },
+
+  hashing: {
+    title: "Hashing & Encryption",
+    summary: "Password hashing and value encryption via Web Crypto — edge-safe, no native bindings.",
+    blocks: [
+      { h: "Hashing passwords" },
+      { p: "`hash.make()` produces a self-describing PBKDF2-SHA256 hash; `hash.verify()` is timing-safe and returns false on a malformed hash." },
+      { code: 'const hashed = await hash.make(password);   // store this\nawait hash.verify(hashed, password);         // true / false\n\nif (hash.needsRehash(user.password)) {\n  user.password = await hash.make(plain);    // rotate work factor\n}' },
+      { h: "Encrypting values" },
+      { p: "`encryption` encrypts any JSON-serializable value with AES-GCM, keyed by `config('app.key')`. `decrypt()` returns null (never throws) on a tampered payload." },
+      { code: 'const token = await encryption.encrypt({ userId: 1 });\nconst data = await encryption.decrypt(token);\n// { userId: 1 }  or  null if tampered' },
+      { note: "Set APP_KEY to a long random secret. Changing it invalidates every encrypted value and signed URL." },
     ],
   },
 
