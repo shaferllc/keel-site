@@ -21,9 +21,9 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console"] },
+  { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -137,10 +137,35 @@ export const PAGES: Record<string, DocPage> = {
       { p: "Name routes for URL generation, and group them to share a prefix, middleware, and name prefix:" },
       { code: 'router.get("/users/:id", [Users, "show"]).name("users.show");\nrouter.url("users.show", { id: 42 }); // "/users/42"\n\nrouter\n  .group(() => {\n    router.get("/status", json({ up: true })).name("status");\n  })\n  .prefix("/api")        // -> /api/status\n  .middleware([auth])\n  .as("api");            // -> "api.status"' },
       { h: "Resource routes" },
-      { p: "Generate RESTful routes (index/create/store/show/edit/update/destroy) for a controller in one line — trim with `.only()`, `.except()`, or `.apiOnly()`:" },
-      { code: 'router.resource("posts", PostController).apiOnly();' },
-      { h: "Constraints, redirects & verbs" },
-      { code: 'router.get("/n/:id", [N, "show"]).where("id", /\\d+/);  // digits only\nrouter.on("/old").redirect("/new");\nrouter.any("/webhook", [Hook, "handle"]);' },
+      { p: "Generate the seven RESTful routes for a controller in one line. Trim with `.only()` / `.except()` / `.apiOnly()`, rename with `.as()` / `.params()`, guard with `.use()`, and nest with a dotted name:" },
+      { code: 'router.resource("posts", PostController).apiOnly();\nrouter.resource("posts.comments", Comments); // /posts/:post_id/comments/:id\nrouter\n  .resource("posts", PostController)\n  .as("articles")\n  .params({ posts: "post" })\n  .use(["store", "update", "destroy"], auth);' },
+      { h: "Param constraints & matchers" },
+      { code: 'router.get("/n/:id", [N, "show"]).where("id", /\\d+/);\nrouter.get("/u/:id", [U, "show"]).where("id", router.matchers.uuid());\nrouter.where("id", router.matchers.number()); // global' },
+      { h: "Brisk routes: redirect, view & Inertia" },
+      { code: 'router.on("/old").redirect("/new");\nrouter.on("/posts").redirectToRoute("articles.index", {}, { qs: { page: 1 } });\nrouter.on("/about").render(AboutPage, { title: "About" });\nrouter.on("/dashboard").renderInertia("Dashboard", { user });' },
+      { h: "Domain & subdomain routing" },
+      { p: "Bind routes to a host pattern; `:segments` capture subdomain params, dispatched by the `Host` header:" },
+      { code: 'router\n  .group(() => {\n    router.get("/", () => json({ tenant: request.subdomain("tenant") }));\n  })\n  .domain(":tenant.example.com");' },
+      { h: "The current route & verbs" },
+      { code: 'request.route;                 // { name, pattern, methods }\nrequest.routeIs("posts.show"); // boolean\nrouter.any("/webhook", [Hook, "handle"]);\nrouter.route(["GET", "POST"], "/search", [S, "index"]);' },
+    ],
+  },
+
+  controllers: {
+    title: "Controllers",
+    summary: "Plain classes in app/Controllers/, resolved from the container with a fresh instance per request.",
+    blocks: [
+      { p: "Each public method is an action. Controllers are resolved from the container, so they get dependency injection (the constructor receives the container)." },
+      { code: 'export class PostController {\n  index() {\n    return json({ posts: [] });\n  }\n  show() {\n    return json({ id: param("id") });\n  }\n}\n\nrouter.get("/posts", [PostController, "index"]);\nrouter.get("/posts/:id", [PostController, "show"]);' },
+      { h: "Single-action controllers" },
+      { p: "Define a `handle` method and reference the class with no method name:" },
+      { code: 'export class PublishPost {\n  handle() { return json({ published: true }); }\n}\nrouter.post("/posts/:id/publish", [PublishPost]);' },
+      { h: "Lazy-loaded controllers" },
+      { p: "Pass a `() => import(...)` loader — the controller is imported only when its route is first hit:" },
+      { code: 'router.get("/reports", [() => import("../Controllers/ReportController.js"), "index"]);' },
+      { h: "Resource controllers" },
+      { code: "npm run keel make:controller Post --resource" },
+      { note: "Wire them up with `router.resource(\"posts\", PostController)` — see Routing." },
     ],
   },
 
@@ -255,6 +280,29 @@ export const PAGES: Record<string, DocPage> = {
       { p: "Your app ships its own console at `bin/console.ts`, so it's yours to extend." },
       { code: "npm run keel routes                 # list routes\nnpm run keel serve --port 8080      # start the server\nnpm run keel make:controller Post   # -> app/Controllers/PostController.ts\nnpm run keel make:provider Billing  # -> app/Providers/BillingServiceProvider.ts\nnpm run keel make:middleware Auth   # -> app/Http/Middleware/authMiddleware.ts" },
       { p: "Generators refuse to overwrite an existing file. Because commands boot the application, they get the same container, config, and providers your HTTP requests do." },
+    ],
+  },
+
+  architecture: {
+    title: "Architecture",
+    summary: "How the pieces fit — container, application, kernel, and the request lifecycle.",
+    blocks: [
+      { p: "Keel is small on purpose. The `Container` is the dependency registry; the `Application` is the container plus a lifecycle (load env + config, register/boot providers); the `HttpKernel` applies middleware and compiles routes onto Hono." },
+      { h: "Boot sequence" },
+      { list: [
+        "`createApplication()` builds the `Application` and loads `.env` + `config/*.ts`",
+        "Each provider's `register()` runs (bind only), then every `boot()` (wire up)",
+        "The HTTP kernel applies global middleware and compiles the router onto Hono",
+        "On Node, `@hono/node-server` serves it; on the edge, the Worker exports its fetch handler",
+      ] },
+      { h: "Request lifecycle" },
+      { list: [
+        "async-context storage captures the request so helpers (`json`, `param`, …) can reach it",
+        "the container is bound to the context; global middleware runs in order",
+        "the handler runs — a closure, a container-resolved controller, or a static response",
+        "thrown errors and unmatched routes flow through the kernel's error renderer",
+      ] },
+      { note: "The whole framework core is a few hundred lines — open the source; there is no hidden magic." },
     ],
   },
 };
