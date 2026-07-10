@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "errors", "validation", "inertia", "console", "architecture"] },
 ];
@@ -180,6 +180,20 @@ export const PAGES: Record<string, DocPage> = {
       { code: 'request.cookie("session");   // one cookie\nrequest.cookie();            // all cookies\n\nresponse.cookie("session", token, { httpOnly: true });\nresponse.clearCookie("session");' },
       { h: "Writing output" },
       { code: 'response.json({ ok: true });\nresponse.send(anything);          // objects → JSON, else text\nresponse.status(201).json(created);\nresponse.cookie("flash", "saved").redirect("/");\nresponse.abort("Not found", 404); // throws an HttpException' },
+    ],
+  },
+
+  sessions: {
+    title: "Sessions",
+    summary: "A cookie-backed session store — edge-safe, no external service, with flash messages.",
+    blocks: [
+      { p: "Add `sessionMiddleware()` to your HTTP kernel, then reach the session anywhere with `session()`. Data lives in an HTTP-only cookie, so it works the same on Node and the edge." },
+      { code: 'this.use(sessionMiddleware());  // in app/Http/Kernel.ts' },
+      { code: 'session().put("userId", user.id);\nconst id = session().get("userId", null);\nsession().has("userId");\nsession().forget("userId");\nsession().pull("cart");        // read + remove\nsession().increment("visits");' },
+      { h: "Flash messages" },
+      { p: "Flash data survives exactly one request — perfect for post-redirect messages:" },
+      { code: 'session().flash("status", "Saved!");\nreturn redirect("/profile");\n\n// next request\nsession().flashed("status"); // "Saved!"' },
+      { note: "Cookie-backed, so keep sessions small (~4KB). For larger sessions, write a middleware that persists to a store and stashes the data on the context the same way." },
     ],
   },
 

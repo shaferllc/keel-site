@@ -8,6 +8,17 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.15.0",
+    date: "2026-07-10",
+    title: "Sessions",
+    changes: [
+      "Cookie-backed session store (edge-safe, no external service).",
+      "session() get/put/has/forget/pull/increment/clear/all.",
+      "Flash messages: session().flash() / flashed() survive one request.",
+      "Enable with sessionMiddleware() in your HTTP kernel.",
+    ],
+  },
+  {
     version: "0.14.0",
     date: "2026-07-10",
     title: "Request input, cookies, response helpers",
