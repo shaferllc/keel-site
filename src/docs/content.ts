@@ -117,17 +117,18 @@ export const PAGES: Record<string, DocPage> = {
 
   routing: {
     title: "Routing",
-    summary: "Closures or controller tuples, resolved from the container with dependency injection.",
+    summary: "Controllers, static responses, or closures — with request/response helpers so you never thread the context.",
     blocks: [
-      { p: "Routes live in `routes/web.ts`. A handler is either an inline closure or a `[Controller, method]` tuple — the controller is resolved from the container, so it gets DI." },
-      { code: 'router.get("/", [HomeController, "index"]);\nrouter.get("/ping", (c) => c.json({ pong: true }));\nrouter.post("/users", [UserController, "store"]);', file: "routes/web.ts" },
+      { p: "Routes live in `routes/web.ts`. A handler can be a `[Controller, method]` tuple (resolved from the container with DI), a **static response** passed directly, or a **closure** for anything that reads the request." },
+      { code: 'router.get("/", [HomeController, "index"]);        // controller\nrouter.get("/health", json({ status: "ok" }));      // static\nrouter.get("/users/:id", () => json({ id: param("id") })); // dynamic', file: "routes/web.ts" },
+      { note: "Rule of thumb: same response every time → pass it directly; response depends on the request → wrap it in `() =>` (param() must run per request)." },
       { h: "Request & response helpers" },
       { p: "You don't have to thread the context (`c`) through everything. Global helpers reach the current request for you:" },
       { code: 'import { json, param, query, body } from "@shaferllc/keel/core";\n\n// instead of  show(c) { return c.json({ id: c.req.param("id") }); }\nshow() {\n  return json({ id: param("id") });\n}\n\nasync store() {\n  const data = await body<{ email: string }>();\n  return json({ created: data.email }, 201);\n}' },
       { list: [
-        "`json(data, status?)` · `text()` · `html()` · `redirect()`",
-        "`param(name)` · `query(name)` · `header(name)` · `body<T>()`",
-        "`request.method` · `request.path` · `request.status` — flat request/response access",
+        "**Read** — `request.param(name)` · `request.query(name)` · `request.header(name)` · `await request.json()`",
+        "**Write** — `response.json(data)` · `response.text()` · `response.html()` · `response.status(201).json(...)`",
+        "**Meta** — `request.method` · `request.path` · `request.status` · `request.raw`",
       ] },
       { p: "The `request` accessor is handy in middleware and logging:" },
       { code: "`${request.method} ${request.path} → ${request.status} (${ms}ms)`" },
