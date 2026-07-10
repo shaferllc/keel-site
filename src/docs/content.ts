@@ -227,6 +227,10 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Named middleware" },
       { p: "Register middleware by name, then reference it by name on routes, groups, and resources — no importing the function everywhere. Unknown names throw when the app builds." },
       { code: 'router.named({ auth, admin });\n\nrouter.get("/dashboard", handler).use("auth");\nrouter.group(() => { /* … */ }).use(["auth", "admin"]);\nrouter.resource("posts", Posts).use(["store", "update"], "auth");' },
+      { h: "Rate limiting" },
+      { p: "`rateLimiter()` is a fixed-window limiter middleware. It sets `X-RateLimit-*` / `Retry-After` headers and returns 429 on exceed. Buckets are keyed by client IP (or a custom key)." },
+      { code: 'this.use(rateLimiter({ max: 60, window: 60 }));       // 60/min per IP\nrouter.post("/login", handler).use(rateLimiter({ max: 5, window: 60 }));\nrateLimiter({ key: (c) => c.req.header("x-api-key") ?? "anon" });' },
+      { note: "The default store is in-memory (per isolate). For distributed limiting, count in Redis/KV via your own middleware." },
     ],
   },
 

@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.25.0",
+    date: "2026-07-10",
+    title: "Rate limiter",
+    changes: [
+      "rateLimiter({ max, window, key, message }) middleware — fixed-window, per-key buckets.",
+      "X-RateLimit-* / Retry-After headers, 429 on exceed.",
+      "In-memory store by default; pluggable for distributed limiting.",
+    ],
+  },
+  {
     version: "0.24.0",
     date: "2026-07-10",
     title: "Hashing + encryption",
