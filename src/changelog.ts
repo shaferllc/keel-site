@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.28.0",
+    date: "2026-07-10",
+    title: "Database query builder",
+    changes: [
+      "Driver-agnostic, parameterized query builder: db(table).where().orderBy().get()/first()/count().",
+      "whereIn/whereNull/orWhere + insert/insertGetId/update/delete.",
+      "Runs through a two-method Connection (setConnection) — D1/Neon/PlanetScale/Turso/pg. Core imports no driver.",
+    ],
+  },
+  {
     version: "0.27.0",
     date: "2026-07-10",
     title: "Authentication",

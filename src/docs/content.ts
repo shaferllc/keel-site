@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "sessions", "authentication", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "sessions", "authentication", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "architecture"] },
 ];
@@ -199,6 +199,20 @@ export const PAGES: Record<string, DocPage> = {
       { p: "Flash data survives exactly one request — perfect for post-redirect messages:" },
       { code: 'session().flash("status", "Saved!");\nreturn redirect("/profile");\n\n// next request\nsession().flashed("status"); // "Saved!"' },
       { note: "Cookie-backed, so keep sessions small (~4KB). For larger sessions, write a middleware that persists to a store and stashes the data on the context the same way." },
+    ],
+  },
+
+  database: {
+    title: "Database",
+    summary: "A driver-agnostic query builder — parameterized SQL through a connection you provide.",
+    blocks: [
+      { p: "The query builder generates SQL and runs it through a two-method `Connection` you register once — so it works with D1, Neon/Postgres, PlanetScale, Turso, better-sqlite3, or pg. The core imports no driver, so it stays edge-safe." },
+      { code: 'const connection: Connection = {\n  select: (sql, bindings) => driver.query(sql, bindings),\n  write: (sql, bindings) => driver.run(sql, bindings),\n};\nsetConnection(connection, "postgres"); // sqlite | mysql | postgres' },
+      { h: "Querying" },
+      { code: 'await db("users").where("active", true).orderBy("name").get();\nawait db("users").where("id", 1).first();          // row | null\nawait db("posts").whereIn("id", [1, 2, 3]).count();\nawait db("posts").whereNull("deleted_at").limit(20).get();' },
+      { h: "Writing" },
+      { code: 'const id = await db("users").insertGetId({ email, name });\nawait db("users").where("id", id).update({ name: "Grace" });\nawait db("users").where("id", id).delete();' },
+      { note: "Everything is parameterized (injection-safe). Pass a row type for typed results: db<User>(\"users\").first(). An active-record Model layer + migrations build on this next." },
     ],
   },
 
