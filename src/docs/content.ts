@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "sessions", "authentication", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "sessions", "authentication", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "architecture"] },
 ];
@@ -213,6 +213,20 @@ export const PAGES: Record<string, DocPage> = {
       { h: "Writing" },
       { code: 'const id = await db("users").insertGetId({ email, name });\nawait db("users").where("id", id).update({ name: "Grace" });\nawait db("users").where("id", id).delete();' },
       { note: "Everything is parameterized (injection-safe). Pass a row type for typed results: db<User>(\"users\").first(). An active-record Model layer + migrations build on this next." },
+    ],
+  },
+
+  models: {
+    title: "Models",
+    summary: "A tiny active-record layer over the query builder — find, create, save, delete.",
+    blocks: [
+      { p: "Subclass `Model`, point it at a table, and get CRUD with no ORM to configure. Use `declare` for columns so they're typed without shadowing the hydrated row values." },
+      { code: 'export class User extends Model {\n  static table = "users";\n  declare id: number;\n  declare email: string;\n}' },
+      { h: "Reading" },
+      { code: 'await User.all();                 // User[]\nawait User.find(1);               // User | null\nawait User.findOrFail(1);         // throws if missing\nawait User.where("active", true); // User[]\nawait User.query().where("age", ">", 18).orderBy("name").get(); // raw builder' },
+      { h: "Writing" },
+      { code: 'const user = await User.create({ email, name });\nuser.name = "Grace";\nawait user.save();   // insert when new, update when existing\nawait user.delete();' },
+      { note: "Deliberately small — CRUD + simple queries without an ORM dependency. Relationships and migrations are on the roadmap; drop to db() for anything richer." },
     ],
   },
 

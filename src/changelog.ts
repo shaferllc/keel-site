@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.29.0",
+    date: "2026-07-10",
+    title: "Active-record models",
+    changes: [
+      "Model base class over the query builder: static find/findOrFail/all/first/where/create.",
+      "Instance save (insert-or-update)/delete/fill/toJSON.",
+      "Runs on any registered connection (edge-safe); Model.query() for the raw builder.",
+    ],
+  },
+  {
     version: "0.28.0",
     date: "2026-07-10",
     title: "Database query builder",
