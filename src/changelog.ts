@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.30.0",
+    date: "2026-07-10",
+    title: "Migrations",
+    changes: [
+      "Fluent schema builder: schema.createTable(name, t => { t.id(); t.string(...).unique(); t.timestamps(); }).",
+      "Migrator up/down/ran — batch-tracked in a migrations table.",
+      "Dialect-aware SQL (sqlite/mysql/postgres); driver-agnostic.",
+    ],
+  },
+  {
     version: "0.29.0",
     date: "2026-07-10",
     title: "Active-record models",

@@ -21,7 +21,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "sessions", "authentication", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "migrations", "sessions", "authentication", "views", "middleware"],
   },
   { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "hono", "architecture"] },
 ];
@@ -185,6 +185,19 @@ export const PAGES: Record<string, DocPage> = {
       { code: 'request.accepts(["application/json", "text/html"]);\nrequest.language(["en", "fr"]);\nrequest.types();' },
       { h: "Writing output" },
       { code: 'response.json({ ok: true });\nresponse.send(anything);          // objects → JSON, else text\nresponse.status(201).json(created);\nresponse.type("text/csv").append("vary", "accept");\nresponse.cookie("flash", "saved").redirect("/");\nresponse.abortIf(!user, "Not found", 404);' },
+    ],
+  },
+
+  migrations: {
+    title: "Migrations",
+    summary: "Version your schema with a fluent builder + migrator — dialect-aware, driver-agnostic.",
+    blocks: [
+      { p: "A migration is a `{ name, up, down }` object. A schema builder describes tables; the migrator runs them against your connection and tracks what's applied." },
+      { code: 'export const migrations: Migration[] = [{\n  name: "01_create_users",\n  up: (s) => s.createTable("users", (t) => {\n    t.id();\n    t.string("email").unique();\n    t.boolean("active").default(true);\n    t.timestamps();\n  }),\n  down: (s) => s.dropTable("users"),\n}];' },
+      { p: "Column types: `t.id/string/text/integer/bigInteger/boolean/timestamp/json/timestamps`, with `.nullable()` / `.unique()` / `.default()`. Use `schema.raw(sql)` for anything else." },
+      { h: "Run and roll back" },
+      { code: 'const migrator = new Migrator(connection, "postgres");\nawait migrator.up(migrations);    // pending only (idempotent)\nawait migrator.down(migrations);  // roll back last batch\nawait migrator.ran();             // applied names' },
+      { note: "Applied migrations are batch-tracked in a migrations table; SQL is dialect-aware (SERIAL vs AUTOINCREMENT vs AUTO_INCREMENT, etc.)." },
     ],
   },
 
