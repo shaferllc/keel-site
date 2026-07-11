@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.42.0",
+    date: "2026-07-10",
+    title: "Lifecycle hooks & graceful shutdown",
+    changes: [
+      "onReady(hook) runs after boot; onShutdown(hook) + terminate() run cleanup LIFO for graceful shutdown on SIGTERM.",
+      "terminate() is idempotent; a throwing hook can't strand the rest. Router.onRoute(hook) observes route registration.",
+      "Application methods + global helpers. Request-lifecycle hooks stay middleware.",
+    ],
+  },
+  {
     version: "0.40.1",
     date: "2026-07-10",
     title: "Raw request-body accessors",
