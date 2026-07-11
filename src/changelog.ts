@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.47.0",
+    date: "2026-07-11",
+    title: "File storage",
+    changes: [
+      "Driver-agnostic storage on a pluggable Disk — core imports no fs/SDK, runs on Node and the edge.",
+      "storage(): put(string|bytes|ArrayBuffer)/get/getText/exists/delete/list(prefix)/url; named disks.",
+      "MemoryDisk is the default for tests; local/S3/R2 adapters in the docs.",
+    ],
+  },
+  {
     version: "0.46.0",
     date: "2026-07-11",
     title: "Authorization (gates & policies)",
