@@ -156,7 +156,7 @@ const STYLES = `
 
   /* ---------- docs ---------- */
   .docs { display: grid; grid-template-columns: 15rem 1fr; gap: 3.5rem; padding: 2.6rem 0 4rem; align-items: start; }
-  .docnav { position: sticky; top: 5.6rem; font-size: .9rem; }
+  .docnav { position: sticky; top: 5.6rem; font-size: .9rem; max-height: calc(100vh - 7rem); overflow-y: auto; }
   .docnav .grp { margin-bottom: 1.6rem; }
   .docnav .grp > span { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: .6rem; }
   .docnav a { display: block; padding: .28rem 0 .28rem .8rem; color: var(--ink-2); border-left: 2px solid var(--rule); transition: color .12s, border-color .12s; }
@@ -224,7 +224,7 @@ const STYLES = `
   @media (max-width: 54rem) {
     .rel { grid-template-columns: 1fr; gap: .6rem; }
     .docs { grid-template-columns: 1fr; gap: 1.5rem; }
-    .docnav { position: static; padding-bottom: 0; }
+    .docnav { position: static; padding-bottom: 0; max-height: none; overflow-y: visible; }
     .hero { grid-template-columns: 1fr; gap: 2.5rem; }
     .hero .figure { order: -1; max-width: 22rem; }
     .bp-grid { grid-template-columns: 1fr; gap: 2rem; }
