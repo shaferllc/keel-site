@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.38.0",
+    date: "2026-07-10",
+    title: "ORM maturity",
+    changes: [
+      "Timestamps: static timestamps auto-manages created_at/updated_at.",
+      "Pagination (Model.paginate / db().paginate → Paginated<T>), aggregates (sum/avg/min/max), value/pluck.",
+      "More clauses (whereBetween/whereNotIn/whereLike, latest/oldest); firstOrCreate/updateOrCreate; update()/refresh().",
+    ],
+  },
+  {
     version: "0.37.1",
     date: "2026-07-10",
     title: "Papercut fixes",
