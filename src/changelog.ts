@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.45.0",
+    date: "2026-07-11",
+    title: "Test client",
+    changes: [
+      "testClient(app) injects requests (no server) → TestResponse with get/post(JSON)/put/patch/delete helpers.",
+      "Fluent, chainable assertions: assertStatus/Ok/Json/Text/Header/Redirect. Body pre-buffered (sync, repeatable reads).",
+      "Accepts an Application, an HttpKernel (for global middleware), or any request()-able. Edge-safe.",
+    ],
+  },
+  {
     version: "0.44.0",
     date: "2026-07-11",
     title: "Declarative request validation",
