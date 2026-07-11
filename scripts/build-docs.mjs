@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "queues", "notifications", "events", "cache", "logger", "validation", "url-builder", "static-files", "inertia", "helpers", "debugging", "console"],
+    slugs: ["mail", "queues", "notifications", "events", "cache", "redis", "logger", "validation", "url-builder", "static-files", "inertia", "helpers", "debugging", "console"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture"] },
 ];

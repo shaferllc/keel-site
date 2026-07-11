@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.39.0",
+    date: "2026-07-10",
+    title: "Redis",
+    changes: [
+      "Pluggable RedisConnection driver — core imports no client, runs on Node and the edge.",
+      "redis(): get/set(ex,px)/del/exists/incr/decr/expire/ttl/keys/flushAll, getJson/setJson, remember.",
+      "MemoryRedis (TTL-aware) is the default for tests; redisStore() adapts it to a CacheStore. Upstash-ready.",
+    ],
+  },
+  {
     version: "0.38.0",
     date: "2026-07-10",
     title: "ORM maturity",
