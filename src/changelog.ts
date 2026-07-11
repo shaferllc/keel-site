@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.48.0",
+    date: "2026-07-11",
+    title: "Task scheduling",
+    changes: [
+      "schedule(job).daily()/everyFiveMinutes()/cron(...) — a task is a Job or a function.",
+      "scheduler().runDue(now) runs everything due (to the minute); built-in cron matcher (*, lists, ranges, steps).",
+      "Wire to Cloudflare Cron Triggers' scheduled() or a Node interval — one trigger drives all tasks.",
+    ],
+  },
+  {
     version: "0.47.0",
     date: "2026-07-11",
     title: "File storage",
