@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.44.0",
+    date: "2026-07-11",
+    title: "Declarative request validation",
+    changes: [
+      "validateRequest({ body, query, params }) validates the request before the handler, rejecting bad input with a 422.",
+      "Errors from every part aggregate (keyed part.field); validated(part) returns the parsed, typed value.",
+      "The declarative counterpart to Fastify route schemas, on the same validate() engine (bring your own schema).",
+    ],
+  },
+  {
     version: "0.43.0",
     date: "2026-07-10",
     title: "Per-request logging & redaction",
