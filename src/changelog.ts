@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.43.0",
+    date: "2026-07-10",
+    title: "Per-request logging & redaction",
+    changes: [
+      "requestLogger() binds a reqId child logger per request so every log line correlates (Fastify's request.log).",
+      "requestLog() reaches the request logger anywhere; logs request start/completion; genReqId/idHeader options.",
+      "Logger redact option replaces top-level keys / dot paths with [redacted] without mutating the logged object.",
+    ],
+  },
+  {
     version: "0.42.0",
     date: "2026-07-10",
     title: "Lifecycle hooks & graceful shutdown",
