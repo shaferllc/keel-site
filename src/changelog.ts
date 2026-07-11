@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.54.0",
+    date: "2026-07-11",
+    title: "Broker: events/context + middlewares",
+    changes: [
+      "Events/context: broadcastLocal, event groups & wildcard patterns, internal events, event + request-tree context.",
+      "Middlewares: new Broker({ middlewares:[...] }) — localAction(next, action) wraps every call (composed), started/stopped lifecycle.",
+      "Moleculer lifecycle hooks and per-service this.logger were already in place.",
+    ],
+  },
+  {
     version: "0.53.0",
     date: "2026-07-11",
     title: "Route config / metadata",
