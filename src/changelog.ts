@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.50.0",
+    date: "2026-07-11",
+    title: "Parameterized providers",
+    changes: [
+      "app.register(Provider, options) hands options to the provider — typed via ServiceProvider<O>, read as this.options.",
+      "Providers are Keel's plugin system; the same class registers multiple times with different options. Reusable plugins.",
+      "Backward compatible (options default to {}). Providers stay un-encapsulated by design; middleware is the per-request seam.",
+    ],
+  },
+  {
     version: "0.49.0",
     date: "2026-07-11",
     title: "Broadcasting",
