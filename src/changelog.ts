@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.40.0",
+    date: "2026-07-10",
+    title: "Request decorators",
+    changes: [
+      "decorateRequest(name, resolver) attaches named per-request values, resolved lazily and memoized per request.",
+      "decorated(name) computes once then caches; setRequestValue overrides from middleware; hasRequestDecorator checks.",
+      "Fastify-inspired, without the null-placeholder/onRequest dance — WeakMap-keyed memo, no cross-request leak.",
+    ],
+  },
+  {
     version: "0.39.0",
     date: "2026-07-10",
     title: "Redis",
