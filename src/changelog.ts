@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.36.0",
+    date: "2026-07-10",
+    title: "Notifications",
+    changes: [
+      "notify(user, new InvoicePaid(4200)) over pluggable channels; via() + toMail/toArray.",
+      "Built-ins: MailChannel (routed by email), DatabaseChannel (inserts toArray), ArrayChannel (tests).",
+      "shouldQueue delivers from a queued job — composes the mail + queue layers. Generator make:notification.",
+    ],
+  },
+  {
     version: "0.35.0",
     date: "2026-07-10",
     title: "Queues & jobs",

@@ -23,7 +23,7 @@ export const GROUPS: { title: string; pages: string[] }[] = [
     title: "The Basics",
     pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "migrations", "factories", "sessions", "authentication", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "mail", "queues", "static", "inertia", "debugging", "console", "hono", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "mail", "queues", "notifications", "static", "inertia", "debugging", "console", "hono", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -290,6 +290,24 @@ export const PAGES: Record<string, DocPage> = {
       { p: "SyncDriver runs jobs the instant they're dispatched (the default; great for dev and tests). MemoryDriver defers them; work() drains the queue FIFO." },
       { code: 'import { setQueue, MemoryDriver, dispatch, work } from "@shaferllc/keel/core";\n\nsetQueue(new MemoryDriver());\nawait dispatch(new SendWelcome("a@x.com"));\nconst ran = await work(); // runs everything pending; returns the count' },
       { note: "A push-only custom driver is the seam for a real broker — e.g. forward to a Cloudflare Queue and reconstruct the job in the consumer. Generate jobs with `keel make:job SendWelcome`." },
+    ],
+  },
+  notifications: {
+    title: "Notifications",
+    summary: "Send a message over one or more channels — mail, database, or your own — inline or queued.",
+    blocks: [
+      { p: "A notification declares what to say and which channels carry it; each channel decides how. This is where the mail and queue layers compose. Subclass Notification: via() lists channels, and each channel reads a matching method (toMail, toArray)." },
+      { code: 'import { Notification, type Notifiable, type MailContent } from "@shaferllc/keel/core";\n\nexport class InvoicePaid extends Notification {\n  constructor(private amount: number) { super(); }\n  via(_n: Notifiable) { return ["mail", "database"]; }\n  toMail(): MailContent {\n    return { subject: "Payment received", text: `Thanks for $${this.amount}.` };\n  }\n  toArray() { return { amount: this.amount }; }\n}' },
+      { h: "Sending" },
+      { p: "A recipient is any object with routing info — usually a User model. The mail channel routes to notifiable.email; override per channel with routeNotificationFor." },
+      { code: 'import { notify } from "@shaferllc/keel/core";\n\nawait notify(user, new InvoicePaid(4200));         // one\nawait notify([alice, bob], new InvoicePaid(4200)); // many' },
+      { h: "Channels" },
+      { p: "The mail channel is registered by default; add others on the notifier. MailChannel delivers via the mailer, DatabaseChannel inserts toArray into a table (type, notifiable_id, data), and ArrayChannel collects deliveries for tests." },
+      { code: 'import { setNotifier, Notifier, DatabaseChannel } from "@shaferllc/keel/core";\n\nsetNotifier(new Notifier().channel("database", new DatabaseChannel()));' },
+      { h: "Queued" },
+      { p: "Set shouldQueue = true and delivery happens from a queued job instead of on the request path — every channel runs inside the job." },
+      { code: 'export class InvoicePaid extends Notification {\n  shouldQueue = true;\n  // …\n}' },
+      { note: "A custom channel is one method — send(notifiable, notification) — the seam for SMS, Slack, or push. Generate a notification with `keel make:notification InvoicePaid`." },
     ],
   },
   authentication: {
