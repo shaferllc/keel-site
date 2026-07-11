@@ -162,6 +162,7 @@ const STYLES = `
   .docnav a { display: block; padding: .28rem 0 .28rem .8rem; color: var(--ink-2); border-left: 2px solid var(--rule); transition: color .12s, border-color .12s; }
   .docnav a:hover { color: var(--ink); }
   .docnav a.on { color: var(--accent-ink); border-left-color: var(--accent); font-weight: 600; }
+  .docmenu summary { display: none; } /* desktop: nav always expanded, no toggle */
   .doc-main { min-width: 0; max-width: 44rem; }
   .crumb { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .8rem; }
   .doc-main h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -0.025em; margin: 0 0 .6rem; line-height: 1.05; }
@@ -178,6 +179,29 @@ const STYLES = `
   .doc-code { border: 1px solid var(--ink); background: var(--panel); margin: 0 0 1.4rem; }
   .doc-code .fn { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--rule); padding: .5rem .9rem; }
   .doc-code pre { margin: 0; padding: 1.1rem 1.2rem; overflow-x: auto; font-family: var(--mono); font-size: .84rem; line-height: 1.75; color: var(--ink); }
+  /* Rendered-markdown body (docs are the keel repo's docs/*.md, rendered at build) */
+  .doc-body { min-width: 0; }
+  .doc-body h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -0.025em; margin: 0 0 1.4rem; line-height: 1.05; }
+  .doc-body h2 { font-family: var(--serif); font-weight: 500; font-size: 1.7rem; letter-spacing: -0.015em; margin: 2.8rem 0 .9rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+  .doc-body h3 { font-family: var(--serif); font-weight: 500; font-size: 1.32rem; margin: 2rem 0 .7rem; }
+  .doc-body h4 { font-family: var(--mono); font-weight: 500; font-size: .96rem; letter-spacing: -0.01em; margin: 1.7rem 0 .6rem; color: var(--ink); }
+  .doc-body h4 code, .doc-body h3 code { background: none; border: none; padding: 0; font-size: 1em; }
+  .doc-body p { color: var(--ink); font-size: 1.02rem; margin: 0 0 1.1rem; }
+  .doc-body a { color: var(--accent-ink); border-bottom: 1px solid var(--accent); }
+  .doc-body a:hover { color: var(--accent); }
+  .doc-body strong { font-weight: 650; }
+  .doc-body code { font-family: var(--mono); font-size: .86em; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 4px; padding: .06rem .3rem; }
+  .doc-body pre { border: 1px solid var(--ink); background: var(--panel); margin: 0 0 1.4rem; padding: 1.1rem 1.2rem; overflow-x: auto; }
+  .doc-body pre code { font-family: var(--mono); font-size: .84rem; line-height: 1.75; color: var(--ink); background: none; border: none; padding: 0; border-radius: 0; }
+  .doc-body ul, .doc-body ol { margin: 0 0 1.3rem; padding-left: 1.3rem; }
+  .doc-body li { margin: .3rem 0; }
+  .doc-body blockquote { border-left: 3px solid var(--accent); background: var(--panel); padding: .9rem 1.1rem; margin: 0 0 1.3rem; font-size: .96rem; color: var(--ink-2); }
+  .doc-body blockquote p:last-child { margin-bottom: 0; }
+  .doc-body table { width: 100%; border-collapse: collapse; margin: 0 0 1.4rem; font-size: .94rem; display: block; overflow-x: auto; }
+  .doc-body th, .doc-body td { border: 1px solid var(--rule); padding: .5rem .7rem; text-align: left; vertical-align: top; }
+  .doc-body th { background: var(--paper-2); font-weight: 600; }
+  .doc-body hr { border: none; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
+  .doc-body h2:first-child, .doc-body h3:first-child { margin-top: 0; border-top: none; padding-top: 0; }
   .doc-foot { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; border-top: 1px solid var(--ink); padding-top: 1.4rem; }
   .doc-foot a { font-family: var(--mono); font-size: .82rem; color: var(--ink-2); }
   .doc-foot a:hover { color: var(--accent); }
@@ -200,7 +224,7 @@ const STYLES = `
   @media (max-width: 54rem) {
     .rel { grid-template-columns: 1fr; gap: .6rem; }
     .docs { grid-template-columns: 1fr; gap: 1.5rem; }
-    .docnav { position: static; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
+    .docnav { position: static; padding-bottom: 0; }
     .hero { grid-template-columns: 1fr; gap: 2.5rem; }
     .hero .figure { order: -1; max-width: 22rem; }
     .bp-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -209,6 +233,36 @@ const STYLES = `
     .bom-row { grid-template-columns: 2rem 1fr; gap: .4rem 1rem; }
     .bom-row .ds, .bom-row a { grid-column: 2; }
     .bar nav a.hidesm { display: none; }
+
+    /* collapsible docs nav — toggles open on tap, saves a long scroll */
+    .docmenu { border: 1px solid var(--rule); background: var(--panel); }
+    .docmenu[open] { padding-bottom: .8rem; }
+    .docmenu summary {
+      display: flex; align-items: center; justify-content: space-between;
+      list-style: none; cursor: pointer; padding: .8rem 1rem;
+      font-family: var(--mono); font-size: .74rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink-2);
+    }
+    .docmenu summary::-webkit-details-marker { display: none; }
+    .docmenu summary::after { content: "▾"; color: var(--ink-3); transition: transform .15s; }
+    .docmenu[open] summary::after { transform: rotate(180deg); }
+    .docmenu .grp { padding: 0 1rem; margin-bottom: 1.1rem; }
+    .docmenu .grp:first-of-type { margin-top: .4rem; }
+  }
+
+  /* ---------- small phones ---------- */
+  @media (max-width: 40rem) {
+    .wrap { padding: 0 1.2rem; }
+    section { padding: 3.2rem 0; }
+    .hero { padding: 2.6rem 0 1rem; }
+    .install { display: flex; max-width: 100%; margin-top: 1.4rem; }
+    .install code { min-width: 0; overflow-x: auto; white-space: nowrap; }
+    .install button { flex: none; }
+    .bar .row { height: 3.6rem; }
+    .brand b { font-size: 1.3rem; }
+    .sheet pre, .doc-code pre, .term pre { font-size: .78rem; }
+    .doc-foot { flex-direction: column; gap: 1.4rem; }
+    .doc-foot .nx { text-align: left; }
   }
 `;
 
@@ -228,6 +282,15 @@ const SCRIPT = `
       setTimeout(function(){ el.textContent = t; el.style.color=''; }, 1100);
     });
   });
+
+  // Docs nav: collapsed by default on phones, always open on wider screens.
+  var dm = document.querySelector('.docmenu');
+  if (dm) {
+    var mq = window.matchMedia('(max-width: 54rem)');
+    var sync = function(){ mq.matches ? dm.removeAttribute('open') : dm.setAttribute('open',''); };
+    sync();
+    mq.addEventListener('change', sync);
+  }
 `;
 
 /** The shared top navigation, so every page's menu stays identical. */
@@ -242,7 +305,7 @@ export const SiteNav: FC<{ version: string; repo: string }> = ({ version, repo }
         <a class="hidesm" href="/#spec">Spec</a>
         <a class="hidesm" href="/#lifecycle">Lifecycle</a>
         <a href="/docs">Docs</a>
-        <a class="hidesm" href="/changelog">Changelog</a>
+        <a href="/changelog">Changelog</a>
         <a class="gh" href={repo}>GitHub ↗</a>
       </nav>
     </div>

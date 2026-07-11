@@ -4,3 +4,6 @@ dist/
 .dev.vars
 *.log
 .DS_Store
+
+# generated from keel repo docs at build
+src/docs/generated.ts

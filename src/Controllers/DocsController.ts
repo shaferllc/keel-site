@@ -1,12 +1,12 @@
 import { view, param, config, NotFoundException } from "keel/core";
 import type { AppInfo } from "../config.js";
-import { PAGES } from "../docs/content.js";
+import { PAGES } from "../docs/generated.js";
 import { DocsPage } from "../views/docs.js";
 
 /** Serves the documentation, rendered by the framework it documents. */
 export class DocsController {
   index() {
-    return view(DocsPage, { slug: "introduction", app: config<AppInfo>("app") });
+    return view(DocsPage, { slug: "getting-started", app: config<AppInfo>("app") });
   }
 
   show() {

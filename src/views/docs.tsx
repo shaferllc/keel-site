@@ -3,43 +3,7 @@
 import type { FC } from "hono/jsx";
 import { Layout, SiteNav } from "./layout.js";
 import type { AppInfo } from "../config.js";
-import { PAGES, GROUPS, ORDER, type Block } from "../docs/content.js";
-
-/** Minimal inline markdown: escape, then **bold**, `code`, and [links](url). */
-function inline(s: string): string {
-  const esc = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  return esc
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-}
-
-function escCode(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-const BlockView: FC<{ block: Block }> = ({ block }) => {
-  if ("h" in block) return <h2 class="doc-h">{block.h}</h2>;
-  if ("p" in block)
-    return <p class="doc-p" dangerouslySetInnerHTML={{ __html: inline(block.p) }} />;
-  if ("note" in block)
-    return <div class="doc-note" dangerouslySetInnerHTML={{ __html: inline(block.note) }} />;
-  if ("list" in block)
-    return (
-      <ul class="doc-list">
-        {block.list.map((li) => (
-          <li dangerouslySetInnerHTML={{ __html: inline(li) }} />
-        ))}
-      </ul>
-    );
-  // code
-  return (
-    <div class="doc-code">
-      {block.file ? <div class="fn">{block.file}</div> : null}
-      <pre dangerouslySetInnerHTML={{ __html: escCode(block.code) }} />
-    </div>
-  );
-};
+import { PAGES, GROUPS, ORDER } from "../docs/generated.js";
 
 export const DocsPage: FC<{ slug: string; app: AppInfo }> = ({ slug, app }) => {
   const page = PAGES[slug]!;
@@ -50,7 +14,7 @@ export const DocsPage: FC<{ slug: string; app: AppInfo }> = ({ slug, app }) => {
   return (
     <Layout
       title={`${page.title} — Keel docs`}
-      description={page.summary}
+      description={`${page.title} — Keel framework documentation.`}
       url={`${app.url}/docs/${slug}`}
     >
       <SiteNav version={app.version} repo={app.repo} />
@@ -58,26 +22,24 @@ export const DocsPage: FC<{ slug: string; app: AppInfo }> = ({ slug, app }) => {
       <div class="wrap">
         <div class="docs">
           <aside class="docnav">
-            {GROUPS.map((g) => (
-              <div class="grp">
-                <span>{g.title}</span>
-                {g.pages.map((p) => (
-                  <a href={`/docs/${p}`} class={p === slug ? "on" : ""}>
-                    {PAGES[p]!.title}
-                  </a>
-                ))}
-              </div>
-            ))}
+            <details class="docmenu" open>
+              <summary>Documentation</summary>
+              {GROUPS.map((g) => (
+                <div class="grp">
+                  <span>{g.title}</span>
+                  {g.pages.map((p) => (
+                    <a href={`/docs/${p}`} class={p === slug ? "on" : ""}>
+                      {PAGES[p]!.title}
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </details>
           </aside>
 
           <main class="doc-main">
             <div class="crumb">Docs / {page.title}</div>
-            <h1>{page.title}</h1>
-            <p class="doc-lead">{page.summary}</p>
-
-            {page.blocks.map((b) => (
-              <BlockView block={b} />
-            ))}
+            <article class="doc-body" dangerouslySetInnerHTML={{ __html: page.html }} />
 
             <div class="doc-foot">
               <span>
