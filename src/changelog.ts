@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.56.0",
+    date: "2026-07-11",
+    title: "Broker: validation + caching",
+    changes: [
+      "Validating: action.params (Zod-style schema) validated+coerced before the handler; bad calls reject with ValidationException.",
+      "Caching: action.cache: true|{ttl,keys} + BrokerOptions.cacher (any Keel Cache) memoizes results by action+params.",
+      "Metrics/tracing (middleware seam + trace ctx), errors (typed + createError), runner (createService+start) — documented.",
+    ],
+  },
+  {
     version: "0.55.0",
     date: "2026-07-11",
     title: "Broker: fault tolerance + registry",
