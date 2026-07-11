@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.37.0",
+    date: "2026-07-10",
+    title: "Templates & transformers",
+    changes: [
+      "Templates: a Blade/Edge-style engine — {{ }} interpolation and @-tags (if/each/include/layout/component/slot/filters).",
+      "Interprets templates against a safe evaluator instead of eval/new Function, so they run on Node and on Workers.",
+      "Transformers: shape models into API JSON — item/collection/document, when/whenLoaded, generator make:transformer.",
+    ],
+  },
+  {
     version: "0.36.0",
     date: "2026-07-10",
     title: "Notifications",

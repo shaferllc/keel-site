@@ -24,11 +24,11 @@ const SECTIONS = [
   { title: "Getting Started", slugs: ["getting-started"] },
   {
     title: "The Basics",
-    slugs: ["container", "providers", "configuration", "routing", "controllers", "request-response", "middleware", "views", "errors"],
+    slugs: ["container", "providers", "configuration", "routing", "controllers", "request-response", "middleware", "views", "templates", "errors"],
   },
   {
     title: "Database",
-    slugs: ["database", "models", "migrations", "factories"],
+    slugs: ["database", "models", "migrations", "factories", "transformers"],
   },
   {
     title: "Auth & Security",
