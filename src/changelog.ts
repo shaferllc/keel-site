@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.57.0",
+    date: "2026-07-11",
+    title: "Application: Feathers-style ergonomics",
+    changes: [
+      "app.configure(fn): inline configurator, chainable — the one-shot alternative to a ServiceProvider.",
+      "app.set/get: app-wide settings store backed by Config (shared store with config()).",
+      "app.on/once/off/emit: app-level events delegating to the Events singleton. New Configurator type.",
+    ],
+  },
+  {
     version: "0.56.0",
     date: "2026-07-11",
     title: "Broker: validation + caching",
