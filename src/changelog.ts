@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.51.0",
+    date: "2026-07-11",
+    title: "Response header helpers + principles",
+    changes: [
+      "response gains headers({...}), getHeader(name), hasHeader(name) — inspect and conditionally set response headers.",
+      "Brings the response accessor to parity with Fastify's Reply.",
+      "Keel's design principles documented in architecture.md (edge-safe/driver-agnostic, explicit-over-implicit).",
+    ],
+  },
+  {
     version: "0.50.0",
     date: "2026-07-11",
     title: "Parameterized providers",
