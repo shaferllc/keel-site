@@ -21,9 +21,9 @@ export const GROUPS: { title: string; pages: string[] }[] = [
   { title: "Getting Started", pages: ["introduction", "installation"] },
   {
     title: "The Basics",
-    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "migrations", "sessions", "authentication", "views", "middleware"],
+    pages: ["container", "providers", "configuration", "routing", "controllers", "request", "database", "models", "migrations", "factories", "sessions", "authentication", "views", "middleware"],
   },
-  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "static", "inertia", "debugging", "console", "hono", "architecture"] },
+  { title: "Digging Deeper", pages: ["helpers", "url-builder", "hashing", "errors", "validation", "events", "cache", "logger", "mail", "queues", "static", "inertia", "debugging", "console", "hono", "architecture"] },
 ];
 
 /** Flat ordered slug list, for prev/next. */
@@ -239,10 +239,59 @@ export const PAGES: Record<string, DocPage> = {
       { code: 'await User.all();                 // User[]\nawait User.find(1);               // User | null\nawait User.findOrFail(1);         // throws if missing\nawait User.where("active", true); // User[]\nawait User.query().where("age", ">", 18).orderBy("name").get(); // raw builder' },
       { h: "Writing" },
       { code: 'const user = await User.create({ email, name });\nuser.name = "Grace";\nawait user.save();   // insert when new, update when existing\nawait user.delete();' },
-      { note: "Deliberately small — CRUD + simple queries without an ORM dependency. Relationships and migrations are on the roadmap; drop to db() for anything richer." },
+      { h: "Relationships" },
+      { p: "Define a relationship as a method returning `hasMany` / `hasOne` / `belongsTo` / `belongsToMany`. Keys follow conventions (`user_id`) but every one is overridable. Relations are awaitable, and `.query()` drops to the builder." },
+      { code: 'class User extends Model {\n  static table = "users";\n  posts() { return this.hasMany(Post); }        // posts.user_id = users.id\n  roles() { return this.belongsToMany(Role); }   // role_user pivot\n}\nclass Post extends Model {\n  static table = "posts";\n  author() { return this.belongsTo(User); }      // posts.user_id -> users.id\n}\n\nconst posts = await user.posts();   // Post[]\nconst author = await post.author(); // User | null' },
+      { p: "`Model.load()` eager-loads with one query per relation — the fix for N+1 — and `belongsToMany` can write its pivot with `attach` / `detach` / `sync`." },
+      { code: 'const users = await User.all();\nawait User.load(users, "posts", "roles"); // 2 queries, not 2xN\nusers[0].getRelation("posts");            // Post[]\n\nawait user.roles().attach(roleId);\nawait user.roles().sync([1, 2, 3]);' },
+      { h: "Attribute casts" },
+      { p: "Declare `static casts` and columns round-trip as real JS types — cast when read, back to storable primitives on write. This is what lets `boolean`/`json` bind cleanly on drivers that reject JS booleans and objects." },
+      { code: 'class Post extends Model {\n  static table = "posts";\n  static casts = {\n    published: "boolean",   // 1/0        <-> true/false\n    meta: "json",           // \'{"a":1}\'  <-> { a: 1 }\n    posted_at: "date",      // ISO string <-> Date\n  };\n}' },
+      { h: "Mass assignment" },
+      { p: "`create()` and `fill()` take untrusted input, so they're guarded. Whitelist with `static fillable` or blacklist with `static guarded`; columns outside the allowance are dropped. `forceFill()` is the explicit bypass." },
+      { code: 'class Post extends Model {\n  static table = "posts";\n  static fillable = ["title", "body"];\n}\nawait Post.create({ title: "Hi", is_admin: true }); // is_admin dropped\npost.fill(await request.all());                      // safe from over-posting' },
+      { note: "Deliberately small — CRUD, relationships, and casts without an ORM dependency. Drop to db() for anything richer. See also Factories & Seeders." },
     ],
   },
 
+  factories: {
+    title: "Factories & Seeders",
+    summary: "Populate the database with realistic fixtures — a built-in Faker, model factories, and seeders.",
+    blocks: [
+      { p: "A factory describes how to build a model's attributes; a seeder orchestrates factories into a repeatable dataset. Both are edge-safe and dependency-free — the built-in Faker needs no external library." },
+      { code: 'import { factory } from "@shaferllc/keel/core";\n\nconst users = factory(User, (f, i) => ({\n  name: f.name(),\n  email: f.email(),\n}));\n\nusers.make();               // a User, not saved\nawait users.create();       // saved, id back-filled\nawait users.count(10).create(); // User[]' },
+      { h: "Faker" },
+      { p: "A small, seedable generator — names, emails, words, numbers, uuids. Seed it for reproducible fixtures." },
+      { code: 'const f = new Faker(42); // seeded — deterministic\nf.name();  f.email();  f.sentence();  f.number(1, 100);  f.uuid();' },
+      { h: "Seeders" },
+      { code: 'class DatabaseSeeder extends Seeder {\n  async run() {\n    await this.call([UserSeeder]); // compose in order\n  }\n}\nawait seed(DatabaseSeeder);' },
+      { note: "Generate them with `keel make:factory User` and `keel make:seeder Database`." },
+    ],
+  },
+  mail: {
+    title: "Mail",
+    summary: "A fluent, edge-safe mailer with pluggable transports — no SDK in the core.",
+    blocks: [
+      { p: "Compose a message with a fluent builder and dispatch it through a pluggable Transport. The API mirrors the database layer: setMailer / mail() are to mail what setConnection / db() are to the database." },
+      { code: 'import { mail } from "@shaferllc/keel/core";\n\nawait mail()\n  .to("ada@example.com")\n  .subject("Welcome aboard")\n  .html("<h1>Hi Ada</h1>")\n  .send();' },
+      { h: "Transports" },
+      { p: "Register a default once. Built-ins: ArrayTransport (collects to .sent, the default and ideal for tests), LogTransport (logs instead of delivering), and fetchTransport for provider HTTP APIs (Resend/Postmark/Mailgun) over fetch." },
+      { code: 'import { setMailer, fetchTransport } from "@shaferllc/keel/core";\n\nsetMailer(\n  fetchTransport({\n    url: "https://api.resend.com/emails",\n    headers: { Authorization: `Bearer ${env("RESEND_API_KEY")}` },\n    body: (m) => ({ from: m.from, to: m.to, subject: m.subject, html: m.html }),\n  }),\n  { from: "hello@myapp.com" },\n);' },
+      { note: "The core imports no SDK — a transport is one method (send), so any provider or your own fetch call plugs in. send() validates recipient/subject/body/from." },
+    ],
+  },
+  queues: {
+    title: "Queues & Jobs",
+    summary: "Move slow work off the request path — dispatch jobs to a pluggable driver.",
+    blocks: [
+      { p: "A job is a class with a handle() method. Dispatch it and a pluggable driver decides when it runs — immediately (the default), held in memory for a worker, or handed to a real broker. The core imports no broker, so it stays edge-safe." },
+      { code: 'import { Job, dispatch } from "@shaferllc/keel/core";\n\nexport class SendWelcome extends Job {\n  constructor(private email: string) { super(); }\n  async handle() {\n    await mail().to(this.email).subject("Welcome").text("Glad you\'re here").send();\n  }\n}\n\nawait dispatch(new SendWelcome(user.email));\nawait dispatch(() => rebuildSearchIndex()); // a function works too' },
+      { h: "Drivers" },
+      { p: "SyncDriver runs jobs the instant they're dispatched (the default; great for dev and tests). MemoryDriver defers them; work() drains the queue FIFO." },
+      { code: 'import { setQueue, MemoryDriver, dispatch, work } from "@shaferllc/keel/core";\n\nsetQueue(new MemoryDriver());\nawait dispatch(new SendWelcome("a@x.com"));\nconst ran = await work(); // runs everything pending; returns the count' },
+      { note: "A push-only custom driver is the seam for a real broker — e.g. forward to a Cloudflare Queue and reconstruct the job in the consumer. Generate jobs with `keel make:job SendWelcome`." },
+    ],
+  },
   authentication: {
     title: "Authentication",
     summary: "Session-based auth built on the session + hash primitives — login, guards, and a pluggable user provider.",

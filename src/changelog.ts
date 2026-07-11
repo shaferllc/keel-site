@@ -8,6 +8,56 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.35.0",
+    date: "2026-07-10",
+    title: "Queues & jobs",
+    changes: [
+      "dispatch(new Job()) or dispatch(fn) onto a pluggable QueueDriver.",
+      "SyncDriver runs immediately (default); MemoryDriver defers, work() drains FIFO.",
+      "{ delay, queue } options; push-only custom driver is the seam for real brokers. Generator make:job.",
+    ],
+  },
+  {
+    version: "0.34.0",
+    date: "2026-07-10",
+    title: "Mail",
+    changes: [
+      "Fluent mailer: mail().to().subject().html().send() over a pluggable Transport.",
+      "Built-ins: ArrayTransport (tests), LogTransport (dev), fetchTransport for provider HTTP APIs.",
+      "Core imports no SDK — edge-safe; send() validates recipient/subject/body/from.",
+    ],
+  },
+  {
+    version: "0.33.0",
+    date: "2026-07-10",
+    title: "Model casts + mass-assignment guarding",
+    changes: [
+      "static casts round-trips columns as real JS types (int/float/boolean/string/json/array/date).",
+      "static fillable/guarded filter create()/fill() against over-posting; forceFill() bypasses.",
+      "No casts/fillable declared = unchanged (backward compatible).",
+    ],
+  },
+  {
+    version: "0.32.0",
+    date: "2026-07-10",
+    title: "Factories & seeders",
+    changes: [
+      "factory(Model, (f, i) => ({...})) with a built-in, dependency-free seedable Faker.",
+      ".make()/.create()/.count(n) + inline overrides; Seeder classes with run() + call([...]).",
+      "Generators make:factory and make:seeder. Edge-safe.",
+    ],
+  },
+  {
+    version: "0.31.0",
+    date: "2026-07-10",
+    title: "Model relationships",
+    changes: [
+      "hasMany/hasOne/belongsTo/belongsToMany on the query builder (no JOINs, edge-safe).",
+      "Relations are awaitable and expose .query(); Model.load() eager-loads with one whereIn (fixes N+1).",
+      "belongsToMany reads a pivot + attach/detach/sync; loaded relations serialize via toJSON().",
+    ],
+  },
+  {
     version: "0.30.0",
     date: "2026-07-10",
     title: "Migrations",
