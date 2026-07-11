@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.37.1",
+    date: "2026-07-10",
+    title: "Papercut fixes",
+    changes: [
+      "make:* stubs import @shaferllc/keel/core (was the non-resolving internal alias).",
+      "Connection.select is non-generic (Promise<Row[]>) — drivers drop the `as Connection` cast.",
+      "hash.verify returns false on malformed hashes; sessions serialize cookies UTF-8-safe (emoji); router.url() fills repeated params.",
+    ],
+  },
+  {
     version: "0.37.0",
     date: "2026-07-10",
     title: "Templates & transformers",
