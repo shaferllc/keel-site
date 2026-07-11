@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.49.0",
+    date: "2026-07-11",
+    title: "Broadcasting",
+    changes: [
+      "broadcast(channels, event, payload) over a pluggable Broadcaster — core owns no socket (Pusher/Ably/Durable Object).",
+      "channelAuth patterns gate private/presence channels (false/true/member-data) via authorizeChannel.",
+      "MemoryBroadcaster is the in-process default and fans out to local subscribers (Durable Object / SSE).",
+    ],
+  },
+  {
     version: "0.48.0",
     date: "2026-07-11",
     title: "Task scheduling",
@@ -131,7 +141,7 @@ export const RELEASES: Release[] = [
     date: "2026-07-10",
     title: "Templates & transformers",
     changes: [
-      "Templates: a Blade/Edge-style engine — {{ }} interpolation and @-tags (if/each/include/layout/component/slot/filters).",
+      "Templates: a {{ }} + @-tag engine (if/each/include/layout/component/slot/filters), in the spirit of AdonisJS Edge.",
       "Interprets templates against a safe evaluator instead of eval/new Function, so they run on Node and on Workers.",
       "Transformers: shape models into API JSON — item/collection/document, when/whenLoaded, generator make:transformer.",
     ],
