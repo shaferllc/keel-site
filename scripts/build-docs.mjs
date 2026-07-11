@@ -32,7 +32,7 @@ const SECTIONS = [
   },
   {
     title: "Auth & Security",
-    slugs: ["sessions", "authentication", "hashing", "rate-limiting"],
+    slugs: ["sessions", "authentication", "authorization", "hashing", "rate-limiting"],
   },
   {
     title: "Digging Deeper",

@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.46.0",
+    date: "2026-07-11",
+    title: "Authorization (gates & policies)",
+    changes: [
+      "define(ability, fn) gates; policy(Model, PolicyClass) routes can('update', post) to PostPolicy.update by class.",
+      "can/cannot booleans; authorize throws 403; canFor/authorizeFor for a specific user; gateBefore admin bypass.",
+      "Current user resolves from auth().user() (setUserResolver overrides); unknown abilities deny.",
+    ],
+  },
+  {
     version: "0.45.0",
     date: "2026-07-11",
     title: "Test client",
