@@ -8,6 +8,15 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.40.1",
+    date: "2026-07-10",
+    title: "Raw request-body accessors",
+    changes: [
+      "request.text(), request.arrayBuffer(), and request.blob() read the body for content types json()/all() don't handle.",
+      "XML, CSV, protobuf, msgpack, or any custom format — parse it yourself. Body parsing stays explicit.",
+    ],
+  },
+  {
     version: "0.40.0",
     date: "2026-07-10",
     title: "Request decorators",

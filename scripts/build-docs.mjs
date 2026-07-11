@@ -24,7 +24,7 @@ const SECTIONS = [
   { title: "Getting Started", slugs: ["getting-started"] },
   {
     title: "The Basics",
-    slugs: ["container", "providers", "configuration", "routing", "controllers", "request-response", "decorators", "middleware", "views", "templates", "errors"],
+    slugs: ["container", "providers", "configuration", "routing", "controllers", "request-response", "decorators", "middleware", "views", "templates", "vite", "errors"],
   },
   {
     title: "Database",
