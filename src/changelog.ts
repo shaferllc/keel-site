@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.53.0",
+    date: "2026-07-11",
+    title: "Route config / metadata",
+    changes: [
+      ".config({...}) attaches metadata to a route or group; read it via request.route.config (Fastify's route config).",
+      "Group config merges into each route (route keys win); route context is set before route middleware.",
+      "Request and Server were already covered — this fills the one gap from Fastify's Routes page.",
+    ],
+  },
+  {
     version: "0.51.0",
     date: "2026-07-11",
     title: "Response header helpers + principles",
