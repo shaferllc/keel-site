@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.55.0",
+    date: "2026-07-11",
+    title: "Broker: fault tolerance + registry",
+    changes: [
+      "Retry: call(..., { retries }) re-runs on failure (BrokerOptions.retries default); fallback: value|fn instead of throwing.",
+      "Order: retry → error hooks → fallback → throw. Registry: hasAction/listActions/listServices/getService.",
+      "Networking = pluggable Transporter seam; single-node has no cross-node balancing (documented).",
+    ],
+  },
+  {
     version: "0.54.0",
     date: "2026-07-11",
     title: "Broker: events/context + middlewares",
