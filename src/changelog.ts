@@ -8,6 +8,127 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.69.0",
+    date: "2026-07-11",
+    title: "AI-native tooling, locks, i18n, mail, queues, logger",
+    changes: [
+      "AI-native tooling: an MCP server (keel mcp) exposing the docs, the full public API, and the generators to any Model Context Protocol client, plus AGENTS.md, llms.txt / llms-full.txt, and the /docs/ai guide — all generated from the same source as the human docs, so they never drift.",
+      "Distributed locks: lock('invoice:42').run(fn) — 'only one of you may do this at a time' across processes and nodes, over a pluggable store seam. Every acquisition mints an owner token, so a late release() can't free a lock someone else now holds. New /docs/locks guide.",
+      "Internationalization with no dependency: ICU messages (plural with =0 branches and #, selectordinal, select, number/date/time, nested), the Intl-backed formatters, detectLocale() and negotiateLocale(), and an es-MX → es → default fallback chain. Plural categories come from the locale, not from English. New /docs/i18n guide.",
+      "Mail: sendLater() to put a message on the queue instead of holding the request open for an SMTP round trip, attachments and inline cid: embeds, BaseMail classes, named mailers, and fakeMail() with separate sent/queued assertions.",
+      "Queues: retries with backoff (exponential/linear/fixed), a failed() hook and a dead-letter list, priority, JobContext, and fakeQueue() with assertions. A failed job no longer takes down the worker — it's logged, recorded, and the queue keeps draining.",
+      "Logger: trace and fatal levels, pluggable sinks (send logs anywhere, not just the console), wildcard/censor/remove redaction, isLevelEnabled() so you don't build a context object for a line nobody emits, and named loggers.",
+    ],
+  },
+  {
+    version: "0.68.0",
+    date: "2026-07-11",
+    title: "Storage signed URLs, typed events, health checks",
+    changes: [
+      "Storage: signedUrl() for private files and signedUploadUrl() so the browser PUTs straight to the bucket (a large upload never streams through a Worker). put() now infers the content type from the extension, so files stop landing in your bucket as application/octet-stream. Plus metadata()/size()/copy()/move(), serveStorage() middleware, and fakeDisk() with assertions.",
+      "Events: an opt-in EventsList registry — declare a payload once and both sides are checked, so what you emit and what a listener receives can't drift apart. Plus onError(), onAny(), and fake() with an assertion buffer. A throwing listener no longer skips the listeners after it.",
+      "Health checks: /health/live (answers instantly, checks nothing — a liveness probe that touched the database would restart a healthy app during a blip) and /health/ready (200 while healthy, 503 when a check fails). Built-in database/redis/cache checks, plus check(name, fn) for your own. New /docs/health guide.",
+    ],
+  },
+  {
+    version: "0.67.0",
+    date: "2026-07-11",
+    title: "Cache: stampede protection, grace, tags, namespaces",
+    changes: [
+      "Stampede protection: concurrent remember() misses for the same key collapse into a single factory run, so a hot key expiring no longer dog-piles the upstream.",
+      "Grace / stale-on-error: an expired value is retained a little longer and served if the refreshing factory throws — a flaky upstream degrades to slightly-stale data instead of an error.",
+      "Tags with deleteByTag(), and namespaces with a scoped flush() — both via version stamps, so invalidation is O(tags) with no key index and works on any store. Plus add(), missing(), and forgetMany().",
+    ],
+  },
+  {
+    version: "0.66.0",
+    date: "2026-07-11",
+    title: "hash.fake() for fast tests",
+    changes: [
+      "hash.fake() / hash.restore(): swap real PBKDF2 for a trivial scheme in tests so suites that create many users don't pay the hashing cost.",
+    ],
+  },
+  {
+    version: "0.65.0",
+    date: "2026-07-11",
+    title: "Security: CORS, shield headers, CSRF",
+    changes: [
+      "cors() middleware with automatic preflight handling (origin allowlist/predicate, credentials, exposeHeaders, maxAge).",
+      "securityHeaders(): CSP (string or directives object), HSTS, X-Frame-Options, nosniff, Referrer-Policy. csrf() session-backed protection with csrfField()/csrfToken() + XSRF-TOKEN cookie for SPAs.",
+      "encryption.encrypt() gains expiresIn + purpose (self-expiring, purpose-bound tokens); rateLimiter adds X-RateLimit-Reset. New /docs/cors and /docs/security guides.",
+    ],
+  },
+  {
+    version: "0.64.0",
+    date: "2026-07-11",
+    title: "Auth: OAuth 1.0a social sign-in",
+    changes: [
+      "social.twitter(config) preset + social.driver1() for any OAuth 1.0a provider (Twitter/X, Trello, …).",
+      "OAuth1Driver: requestToken → redirect → accessToken/user three-legged flow, HMAC-SHA1-signed with Web Crypto (edge-native). Same normalized SocialUser.",
+      "oauth1Signature() low-level RFC 5849 signer exposed for custom API calls (verified against the canonical Twitter vector).",
+    ],
+  },
+  {
+    version: "0.63.0",
+    date: "2026-07-11",
+    title: "Auth: the full kitchen",
+    changes: [
+      "Opaque access tokens: revocable, ability-scoped, DB-backed bearer tokens (createToken/verifyToken/revoke/listTokens) + tokenAuth() guard with abilities. Split selector/verifier, hash-only storage, no RETURNING needed.",
+      "Social sign-in: fetch-based OAuth2 with GitHub/Google/Discord presets (social.github/google/discord) + social.driver() for any provider; normalized SocialUser. New /docs/social-auth guide.",
+      "basicAuth() guard (WWW-Authenticate challenge), hash.dummy for timing-safe login, and gateAfter() to complete authorization parity. Edge-native, all additive.",
+    ],
+  },
+  {
+    version: "0.62.0",
+    date: "2026-07-11",
+    title: "Request/Response: proxy-aware URLs + helpers",
+    changes: [
+      "Proxy-aware URL accessors: request.protocol/secure/host/hostname/origin/fullUrl/querystring, honoring X-Forwarded-Proto/Host.",
+      "response.back(fallback) + redirect('back') via Referer; response.attachment(filename) with RFC 5987 filename*.",
+      "Encoding & charset content negotiation (request.encoding/encodings, charset/charsets) alongside accepts/language.",
+    ],
+  },
+  {
+    version: "0.61.0",
+    date: "2026-07-11",
+    title: "Database: batteries-included adapters",
+    changes: [
+      "@shaferllc/keel/db/d1 — d1Connection(env.DB) for Cloudflare D1 (sqlite).",
+      "@shaferllc/keel/db/pg — pgConnection(client) for pg (Node) or @neondatabase/serverless (edge).",
+      "@shaferllc/keel/db/libsql — libsqlConnection(client) for @libsql/client / Turso. Each duck-types its driver: core stays dependency-free, you install only what you use.",
+    ],
+  },
+  {
+    version: "0.60.0",
+    date: "2026-07-11",
+    title: "Database: multiple connections",
+    changes: [
+      "addConnection(name, conn, dialect): register named connections alongside the default — talk to several databases at once, each with its own dialect.",
+      "db(table, name) routes a query to a named connection; connection(name) returns a handle (table() + raw select/write); Model.connection puts a whole model on one.",
+      "setDefaultConnection/connectionNames/clearConnections. Fully backward compatible (setConnection = default); resolution stays lazy. Edge-safe, no bundled driver.",
+    ],
+  },
+  {
+    version: "0.59.0",
+    date: "2026-07-11",
+    title: "Auth: stateless JWT tokens + bearer guard",
+    changes: [
+      "jwt.sign/verify: HS256 on Web Crypto (no deps), signed with app.key. expiresIn (secs or '1h'/'7d'), subject/issuer/audience; verify returns null (never throws) and refuses alg:none.",
+      "bearerAuth(): guard that reads Authorization: Bearer, verifies, and drives auth() — no session store needed. { optional: true } lets guests through.",
+      "auth().id() now honors a verified token over the session. Local login (hash + login) unchanged; OAuth out of scope.",
+    ],
+  },
+  {
+    version: "0.58.0",
+    date: "2026-07-11",
+    title: "Errors: full HTTP exception family",
+    changes: [
+      "Named exception classes for every common status (400/402/405/406/408/409/411/429/500/501/502/503), each with a fixed status + stable machine code.",
+      "HttpException gains an optional data bag that surfaces in the JSON body, plus toJSON() returning the rendered body shape (errors for ValidationException).",
+      "STATUS_TEXT gains labels for the new statuses. All additive and backward compatible.",
+    ],
+  },
+  {
     version: "0.57.0",
     date: "2026-07-11",
     title: "Application: Feathers-style ergonomics",
