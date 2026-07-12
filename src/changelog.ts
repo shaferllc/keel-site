@@ -8,6 +8,14 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.69.1",
+    date: "2026-07-11",
+    title: "serveStorage: fail loudly on a basePath mismatch",
+    changes: [
+      "serveStorage({ signed: true }) now throws when the disk's url() prefix doesn't match basePath, naming both paths. It used to 403 every request — which reads as 'your link expired' and sends you hunting in the wrong place, when the real problem is a misconfiguration.",
+    ],
+  },
+  {
     version: "0.69.0",
     date: "2026-07-11",
     title: "AI-native tooling, locks, i18n, mail, queues, logger",
