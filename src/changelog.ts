@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.74.0",
+    date: "2026-07-11",
+    title: "Environment validation: fail at boot, not at 3am",
+    changes: [
+      "defineEnv() validates the whole environment up front and refuses to start otherwise. env('DATABASE_URL') hands back whatever is (or isn't) in process.env, so a missing variable boots a perfectly healthy-looking app that dies on the first request that needs it — in production, at night.",
+      "The value types are inferred from the rules: a number rule gives a number (not '3000'), an enum gives the literal union (not string), and anything optional without a default is | undefined, so you can't forget to handle it.",
+      "Every problem is reported at once, not the first one. Fixing a deploy one missing variable per restart is its own small hell. Rules: envVar.string/number/boolean/enum/url, with required, default, description (shown in the failure), and validate. An empty string counts as absent — PORT= in a .env is a typo, not a deliberate empty port.",
+    ],
+  },
+  {
     version: "0.73.0",
     date: "2026-07-11",
     title: "Database transactions",
