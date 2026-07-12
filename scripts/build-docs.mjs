@@ -41,11 +41,11 @@ const SECTIONS = [
   },
   {
     title: "Auth & Security",
-    slugs: ["sessions", "authentication", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
+    slugs: ["sessions", "authentication", "accounts", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console"],
+    slugs: ["mail", "billing", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture", "ai"] },
 ];
