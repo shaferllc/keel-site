@@ -11,12 +11,21 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
 // Prefer the installed package's docs; fall back to the sibling checkout.
-const candidates = [join(root, "node_modules/@shaferllc/keel/docs"), join(root, "../keel/docs")];
-const docsDir = candidates.find((d) => existsSync(d));
-if (!docsDir) {
-  console.error("build-docs: no docs directory found in", candidates);
+const sources = [
+  { docs: join(root, "node_modules/@shaferllc/keel/docs"), pkg: join(root, "node_modules/@shaferllc/keel/package.json") },
+  { docs: join(root, "../keel/docs"), pkg: join(root, "../keel/package.json") },
+];
+const source = sources.find((s) => existsSync(s.docs));
+if (!source) {
+  console.error("build-docs: no docs directory found in", sources.map((s) => s.docs));
   process.exit(1);
 }
+const docsDir = source.docs;
+
+// The version comes from whatever we're rendering the docs OF. Hardcoding it in
+// config.ts let the header say 0.78.2 while the guides on the page were 0.79.0's
+// — the number and the prose have to come from the same place or they drift.
+const version = JSON.parse(readFileSync(source.pkg, "utf8")).version;
 
 // Conceptual pages have no exported API and use these slugs; everything else is
 // an API guide. The ordering here drives the sidebar sections.
@@ -109,7 +118,10 @@ export interface DocPage { title: string; html: string; }
 export const PAGES: Record<string, DocPage> = ${JSON.stringify(pages)};
 export const GROUPS: { title: string; pages: string[] }[] = ${JSON.stringify(groups)};
 export const ORDER: string[] = ${JSON.stringify(order)};
+
+/** The Keel version these guides were rendered from. */
+export const KEEL_VERSION = ${JSON.stringify(version)};
 `;
 
 writeFileSync(join(root, "src/docs/generated.ts"), out);
-console.log(`build-docs: rendered ${Object.keys(pages).length} guides from ${docsDir}`);
+console.log(`build-docs: rendered ${Object.keys(pages).length} guides from ${docsDir} (v${version})`);

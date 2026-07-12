@@ -1,0 +1,95 @@
+name: Deploy
+
+# The site used to go out only when someone ran `npm run deploy` on their laptop,
+# so it lagged the framework: keel shipped 0.79.0 and keeljs.com still said 0.78.2.
+# Now a push deploys, and a release deploys.
+on:
+  push:
+    branches: [main]
+  # Sent by the keel repo's release workflow once a version is on npm. The site
+  # follows the framework instead of waiting for someone to remember it.
+  repository_dispatch:
+    types: [keel-released]
+  workflow_dispatch:
+
+concurrency:
+  # A newer deploy supersedes an older one — never race two wrangler uploads.
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # to commit the version bump on a release dispatch
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # On a release dispatch, move to the version that was just published. The
+      # caret can't do this for us: for a 0.x version, ^0.79.0 means ">=0.79.0
+      # <0.80.0" — every minor needs an explicit bump.
+      - name: Follow the released version
+        if: github.event_name == 'repository_dispatch'
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          if [ -z "$VERSION" ]; then
+            echo "::error::dispatch carried no version"
+            exit 1
+          fi
+          npm install "@shaferllc/keel@${VERSION}" --save --save-exact=false
+
+          if git diff --quiet -- package.json package-lock.json; then
+            echo "already on ${VERSION}"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Site: keel ${VERSION}" -- package.json package-lock.json
+          # A push authenticated with GITHUB_TOKEN does not re-trigger `on: push`,
+          # so this cannot loop back into another deploy.
+          git push
+
+      # Renders the guides out of the installed package and bakes them into the
+      # Worker — this is where the version in the header comes from too.
+      - name: Build docs
+        run: npm run docs
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # Deploying is not the same as being live. Assert the version the site
+      # actually serves, against the workers.dev origin — the custom domain sits
+      # behind Cloudflare's edge cache and has reported stale content before.
+      - name: The deployed site serves the version we built
+        run: |
+          expected="$(node -p "require('@shaferllc/keel/package.json').version")"
+          for i in $(seq 1 10); do
+            served="$(curl -sL "https://keel-site.flat-thunder-531a.workers.dev/?cb=${i}${RANDOM}" \
+              | grep -oE '0\.[0-9]+\.[0-9]+' | head -1)"
+            if [ "$served" = "$expected" ]; then
+              echo "live: ${served}"
+              exit 0
+            fi
+            echo "serving '${served}', want '${expected}' — retrying"
+            sleep 6
+          done
+          echo "::error::site still serving '${served}' after deploy (want ${expected})"
+          exit 1
