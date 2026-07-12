@@ -24,7 +24,7 @@ const SECTIONS = [
   { title: "Getting Started", slugs: ["getting-started"] },
   {
     title: "The Basics",
-    slugs: ["container", "providers", "configuration", "routing", "controllers", "request-response", "decorators", "middleware", "hooks", "views", "templates", "vite", "errors"],
+    slugs: ["container", "providers", "configuration", "routing", "pages", "controllers", "request-response", "decorators", "middleware", "hooks", "views", "templates", "vite", "errors"],
   },
   {
     title: "Database",
@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "telemetry", "helpers", "debugging", "testing", "console"],
+    slugs: ["mail", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture", "ai"] },
 ];

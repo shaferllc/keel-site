@@ -8,6 +8,17 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.71.0",
+    date: "2026-07-11",
+    title: "Pages, packages, and Watch",
+    changes: [
+      "Pages: page-based routing, where a file is a route. resources/pages/users/[id].tsx serves /users/:id — no route file to keep in sync, no controller, no wiring. index names its directory, [id] is a parameter, [...slug] is a catch-all, and a leading _ keeps a file private. A loader fetches the page's data; middleware guards it and runs before the loader. New /docs/pages guide, plus keel make:page.",
+      "Pages decide specificity for you — the part file-based routing usually gets wrong. Register /users/:id before /users/new and the literal page is unreachable forever, because :id matches 'new'. Pages are sorted before they're registered, so the file layout stops being a trap. And it drives the router rather than replacing it: every page is an ordinary named route, so url() finds it and keel routes lists it.",
+      "Packages: a redistributable slice of an app — routes, UI, config, migrations, console commands — that installs with a single app.register(). PackageProvider adds the conventions a shippable package needs, so it can carry its own schema and assets instead of asking the host app to wire them by hand. New /docs/packages guide.",
+      "Watch: a debug dashboard at /watch recording the requests, queries, exceptions, logs, jobs, mail, notifications, cache lookups, events, and scheduled tasks flowing through your app — with every request linked to the queries and logs it produced. Ships as a Keel package, and is that system's reference implementation. New /docs/watch guide.",
+    ],
+  },
+  {
     version: "0.70.0",
     date: "2026-07-11",
     title: "Telemetry and a real testing toolkit",
