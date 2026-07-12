@@ -8,6 +8,16 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.79.0",
+    date: "2026-07-12",
+    title: "Route model binding",
+    changes: [
+      "A :post in the path arrives as a Post, not a string. bindModel('post', Post) once, then boundModel(Post) in the handler — already fetched, never null. The row is looked up before the handler runs and a miss is a 404 there and then, so 'forgot the 404' stops being a bug you can write.",
+      "scope is security, not a filter: a row outside it is a 404 — not a 403, which would confirm it exists, and not merely absent from a list — so it can't be reached by guessing its id. The scope gets the request, so it can depend on who is asking.",
+      "Binding runs before route middleware, so a policy can read the model instead of re-fetching it. key binds by another column (/posts/hello-world), bindRoute() resolves anything that isn't a model, and an unbound param is left alone.",
+    ],
+  },
+  {
     version: "0.78.2",
     date: "2026-07-11",
     title: "Releases publish themselves",
