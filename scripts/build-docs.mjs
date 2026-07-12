@@ -104,8 +104,15 @@ for (const section of SECTIONS) {
   }
 }
 
+// The changelog is rendered too, but it is not a guide — it has its own page rather
+// than a sidebar entry. The site used to keep a hand-written copy of it, which is why
+// that copy sat five releases out of date; there is now one source of truth.
+const changelogHtml = known.has("changelog")
+  ? marked.parse(readFileSync(join(docsDir, "changelog.md"), "utf8").replace(/^#\s+.+$\n?/m, ""))
+  : "";
+
 // Warn about any guide not placed in a section (so nothing silently drops).
-const placed = new Set(SECTIONS.flatMap((s) => s.slugs));
+const placed = new Set([...SECTIONS.flatMap((s) => s.slugs), "changelog"]);
 for (const slug of known) {
   if (!placed.has(slug)) console.warn(`build-docs: ${slug}.md is not in any section (skipped)`);
 }
@@ -121,6 +128,9 @@ export const ORDER: string[] = ${JSON.stringify(order)};
 
 /** The Keel version these guides were rendered from. */
 export const KEEL_VERSION = ${JSON.stringify(version)};
+
+/** The framework's own CHANGELOG.md, rendered. One source of truth. */
+export const CHANGELOG_HTML = ${JSON.stringify(changelogHtml)};
 `;
 
 // generated.ts is the only file in src/docs/ and it's gitignored, so a fresh

@@ -3,8 +3,16 @@
 import type { FC } from "hono/jsx";
 import { Layout, SiteNav } from "./layout.js";
 import type { AppInfo } from "../config.js";
-import { RELEASES } from "../changelog.js";
+import { CHANGELOG_HTML } from "../docs/generated.js";
 
+/**
+ * Renders the framework's own CHANGELOG.md.
+ *
+ * This page used to be a hand-maintained array in src/changelog.ts — which is exactly
+ * why it sat five releases out of date while the framework kept shipping. One source
+ * of truth now: the changelog lives in the keel repo, ships inside the package, and
+ * is rendered here, so it cannot drift from what was actually released.
+ */
 export const ChangelogPage: FC<{ app: AppInfo }> = ({ app }) => (
   <Layout
     title="Changelog — Keel"
@@ -22,28 +30,14 @@ export const ChangelogPage: FC<{ app: AppInfo }> = ({ app }) => (
           </div>
           <p>
             Every release, newest first. Full notes on{" "}
-            <a class="lnk" href={`${app.repo}/releases`}>GitHub</a>.
+            <a class="lnk" href={`${app.repo}/releases`}>
+              GitHub
+            </a>
+            .
           </p>
         </div>
 
-        <div class="log">
-          {RELEASES.map((r) => (
-            <div class="rel">
-              <div class="rel-meta">
-                <span class="ver">v{r.version}</span>
-                <span class="date">{r.date}</span>
-              </div>
-              <div class="rel-body">
-                <h3>{r.title}</h3>
-                <ul>
-                  {r.changes.map((c) => (
-                    <li>{c}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
+        <article class="doc-body" dangerouslySetInnerHTML={{ __html: CHANGELOG_HTML }} />
       </section>
     </div>
 
