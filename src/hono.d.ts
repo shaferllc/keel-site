@@ -1,4 +1,4 @@
-import type { Application } from "keel/core";
+import type { Application } from "@shaferllc/keel/core";
 
 /**
  * Keel stashes the application container on the Hono context as `app`. This

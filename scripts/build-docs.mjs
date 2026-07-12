@@ -11,7 +11,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
 // Prefer the installed package's docs; fall back to the sibling checkout.
-const candidates = [join(root, "node_modules/keel/docs"), join(root, "../keel/docs")];
+const candidates = [join(root, "node_modules/@shaferllc/keel/docs"), join(root, "../keel/docs")];
 const docsDir = candidates.find((d) => existsSync(d));
 if (!docsDir) {
   console.error("build-docs: no docs directory found in", candidates);
@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console"],
+    slugs: ["mail", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture", "ai"] },
 ];

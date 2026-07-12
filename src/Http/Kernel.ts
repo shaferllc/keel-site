@@ -1,5 +1,5 @@
-import { HttpKernel } from "keel/core";
-import type { Application } from "keel/core";
+import { HttpKernel } from "@shaferllc/keel/core";
+import type { Application } from "@shaferllc/keel/core";
 import { canonicalHost } from "./Middleware/canonicalHost.js";
 import { poweredBy } from "./Middleware/poweredBy.js";
 

@@ -1,4 +1,4 @@
-import { ServiceProvider } from "keel/core";
+import { ServiceProvider } from "@shaferllc/keel/core";
 
 /** The site's primary provider. Bind site services here if it grows. */
 export class AppServiceProvider extends ServiceProvider {

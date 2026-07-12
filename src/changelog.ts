@@ -8,6 +8,51 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.78.2",
+    date: "2026-07-11",
+    title: "Releases publish themselves",
+    changes: [
+      "Pushing a v* tag now builds, tests and publishes to npm from CI, via trusted publishing (OIDC) — no token to leak or rotate, and npm attaches a provenance attestation: proof the tarball was built from that commit by that workflow rather than uploaded from a laptop.",
+      "Publishing by hand is why npm drifted from git — git reached v0.77.0 while npm's latest still said 0.74.0. The tag is the release now. It refuses to publish if the tag disagrees with package.json, or if the typecheck, tests or build fail: a tag can point at any commit, including one CI never saw.",
+      "Exports ./package.json, which Node blocks under an exports map unless it is listed — and plenty of tooling reads it.",
+    ],
+  },
+  {
+    version: "0.78.0",
+    date: "2026-07-11",
+    title: "The framework repo is only the framework",
+    changes: [
+      "The demo app is gone from the framework: app/, bootstrap/, config/, routes/, resources/, database/, bin/keel.ts and vite.config.ts were an example application living inside the library. None of it ever shipped, and once the CLI's dependency was inverted, nothing in the framework referenced it. Your application code belongs in your repo — the starter app has the layout.",
+    ],
+  },
+  {
+    version: "0.77.0",
+    date: "2026-07-11",
+    title: "The console runs on Keel's own console",
+    changes: [
+      "All 20 built-in commands (serve, routes, repl, mcp, every make:*, migrate:*, vendor:publish) are now defineCommand()s on the ConsoleKernel. commander is gone — removed, not promoted to a runtime dependency.",
+      "What that buys: generated help (keel help make:controller prints usage, args and options), commands grouped by namespace, routes and migrate:status as real tables, and typed flags everywhere — keel routes --nope is an error rather than a shrug.",
+      "PackageCommand is now defineCommand()'s shape, so a package's commands get typed args and flags, generated help and the terminal UI for free. That port fixed a live bug: watch:prune --hours lots did Number('lots') → NaN, so the retention cutoff became NaN. A typed flag.number() rejects it as a usage error.",
+    ],
+  },
+  {
+    version: "0.76.0",
+    date: "2026-07-11",
+    title: "The console ships in the package",
+    changes: [
+      "@shaferllc/keel/cli — an app gets serve, routes, repl, migrate:* and every make:* generator from the dependency, rather than vendoring its own.",
+      "run(argv, { createApplication }): the console is handed an application factory instead of importing one. The CLI used to import bootstrap/app.ts — the framework depending on an application, which is the dependency pointing the wrong way. It also meant the file reached outside rootDir, so the build had to exclude it, so the console was not in the published package at all.",
+    ],
+  },
+  {
+    version: "0.75.1",
+    date: "2026-07-11",
+    title: "Remove the Remult references",
+    changes: [
+      "Keel isn't that, and the docs shouldn't read as a comparison to another framework. The API-resources guide and the source comments now make their own point instead of making it by contrast.",
+    ],
+  },
+  {
     version: "0.75.0",
     date: "2026-07-11",
     title: "API resources: a CRUD REST API from a model",

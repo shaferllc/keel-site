@@ -1,4 +1,4 @@
-import { view, param, config, NotFoundException } from "keel/core";
+import { view, param, config, NotFoundException } from "@shaferllc/keel/core";
 import type { AppInfo } from "../config.js";
 import { PAGES } from "../docs/generated.js";
 import { DocsPage } from "../views/docs.js";

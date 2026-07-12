@@ -1,4 +1,4 @@
-import type { Router } from "keel/core";
+import type { Router } from "@shaferllc/keel/core";
 import { SiteController } from "../Controllers/SiteController.js";
 import { DocsController } from "../Controllers/DocsController.js";
 

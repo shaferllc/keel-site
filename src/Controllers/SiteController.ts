@@ -1,5 +1,5 @@
-import type { Ctx } from "keel/core";
-import { config, view } from "keel/core";
+import type { Ctx } from "@shaferllc/keel/core";
+import { config, view } from "@shaferllc/keel/core";
 import type { AppInfo } from "../config.js";
 import { HomePage } from "../views/home.js";
 import { ChangelogPage } from "../views/changelog.js";

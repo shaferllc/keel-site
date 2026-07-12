@@ -1,4 +1,4 @@
-import type { ConfigData } from "keel/core";
+import type { ConfigData } from "@shaferllc/keel/core";
 
 export interface AppInfo {
   name: string;
@@ -21,7 +21,7 @@ export const config: ConfigData = {
     tagline: "The house framework for Node.js.",
     description:
       "A real service container, service providers, expressive routing, JSX views, and a code-generating console — on a modern TypeScript stack that runs on Node and the edge.",
-    version: "0.75.1",
+    version: "0.78.2",
     url: "https://keeljs.com",
     repo: "https://github.com/shaferllc/keel",
     docs: "https://github.com/shaferllc/keel/tree/main/docs",

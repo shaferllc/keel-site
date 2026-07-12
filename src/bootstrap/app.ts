@@ -6,7 +6,7 @@
  * the same Keel you run on Node.
  */
 
-import { Application, Router } from "keel/core";
+import { Application, Router } from "@shaferllc/keel/core";
 import type { Hono } from "hono";
 import { config } from "../config.js";
 import { Kernel } from "../Http/Kernel.js";
