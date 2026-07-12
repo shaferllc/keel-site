@@ -8,6 +8,36 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.75.0",
+    date: "2026-07-11",
+    title: "API resources: a CRUD REST API from a model",
+    changes: [
+      "apiResource(router, Post, { … }) registers real routes on the router — so url() finds them, keel routes lists them, and the openapi package documents them for free — rather than hiding a generic handler behind a wildcard.",
+      "Access is deny-by-default: an action with no rule returns 403. For a generated API that's the only safe default — you opt routes open, never shut, so forgetting a rule fails closed instead of publishing your table.",
+      "Filtering and sorting are allow-listed, so a column not on the list never reaches SQL (?sort=password does nothing), and perPage is clamped, so there's no 'give me everything'.",
+      "scope is row-level security, not decoration: a row outside the scope 404s for read, update AND delete — not merely absent from the list — so it can't be fetched, changed, or removed by guessing its id.",
+      "Writes run through the model's mass-assignment guard and your Zod schema, with beforeWrite to set fields the client never sends (an owner id, timestamps), and transform to shape the output.",
+    ],
+  },
+  {
+    version: "0.74.4",
+    date: "2026-07-11",
+    title: "Type-check the test suite; guard the release build",
+    changes: [
+      "The test suite was never type-checked — tests/ was in no tsconfig's include, and tsx strips types without checking them. It had 44 invisible type errors, and every 'compile-time assertion' written into a test was asserting nothing at all. All 44 are fixed, and npm run typecheck now covers src and tests.",
+      "That immediately surfaced a real bug in the shipped API: flag.string({ parse }) didn't infer its parameter in the emitted declarations, so a consumer would have had to annotate it by hand. Same bug, same fix, as envVar's validate.",
+      "npm run verify:release builds from what is committed, not the working tree. npm test and npm run typecheck both run against your working directory, so neither can see a file committed half-written — while a git install runs the build through prepare.",
+    ],
+  },
+  {
+    version: "0.74.3",
+    date: "2026-07-11",
+    title: "Buildable release",
+    changes: [
+      "v0.74.0 through v0.74.2 could not be installed: an in-progress feature was committed half-written, so the build that every git install runs through `prepare` failed. Use 0.74.3 or later for the environment validation below.",
+    ],
+  },
+  {
     version: "0.74.0",
     date: "2026-07-11",
     title: "Environment validation: fail at boot, not at 3am",
