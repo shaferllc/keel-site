@@ -8,6 +8,17 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.70.0",
+    date: "2026-07-11",
+    title: "Telemetry and a real testing toolkit",
+    changes: [
+      "Telemetry: distributed tracing with no SDK. trace(name, fn) opens a span and nests automatically across await boundaries — and across concurrent traces, because the current span lives in AsyncLocalStorage rather than a global. tracing() middleware opens a server span per request and joins the caller's trace via their traceparent. Speaks OTLP/HTTP over fetch, so it runs on Workers as happily as on Node, and any collector takes it (Jaeger, Tempo, Honeycomb, Grafana, Datadog). New /docs/telemetry guide.",
+      "Sampling decided once at the root and inherited by every child (half a trace is worse than none), injectTraceContext() for outgoing calls, traceIds() to hang trace_id/span_id on a log line, and otlpExporter / consoleExporter / MemoryExporter.",
+      "Testing: assertJsonContains (a subset match, so adding an unrelated field doesn't break twenty tests), assertValidationErrors, assertSee, assertCookie, status shorthands, and withToken/withCookie/form/multipart request builders that return a copy so a configured client can't leak into another test.",
+      "Testing: database assertions (assertDatabaseHas/Missing/Count/Empty), truncate(), freezeTime/timeTravel so 'expires in an hour' doesn't take an hour, spy()/spyOn() that call through by default, resetState() to stop one test leaking into the next, and runCommand() for console tests.",
+    ],
+  },
+  {
     version: "0.69.1",
     date: "2026-07-11",
     title: "serveStorage: fail loudly on a basePath mismatch",
