@@ -2,7 +2,7 @@
 // the Worker as src/docs/generated.ts. One source of truth — the guides live in
 // the keel repo (docs/*.md); this site renders them verbatim. Reads the sibling
 // checkout (docs aren't shipped in the npm package, which is `files: ["dist"]`).
-import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Marked } from "marked";
@@ -123,5 +123,8 @@ export const ORDER: string[] = ${JSON.stringify(order)};
 export const KEEL_VERSION = ${JSON.stringify(version)};
 `;
 
+// generated.ts is the only file in src/docs/ and it's gitignored, so a fresh
+// clone has no such directory — this ran fine on a laptop and died in CI.
+mkdirSync(join(root, "src/docs"), { recursive: true });
 writeFileSync(join(root, "src/docs/generated.ts"), out);
 console.log(`build-docs: rendered ${Object.keys(pages).length} guides from ${docsDir} (v${version})`);
