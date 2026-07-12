@@ -6,8 +6,13 @@ name: Deploy
 on:
   push:
     branches: [main]
-  # Sent by the keel repo's release workflow once a version is on npm. The site
-  # follows the framework instead of waiting for someone to remember it.
+  # The site follows the framework on its own: it asks npm what the latest version
+  # is and bumps to it. No cross-repo credential — the alternative was a PAT living
+  # in keel's Actions forever just to announce "a version shipped."
+  schedule:
+    - cron: "*/30 * * * *"
+  # keel's release workflow can also push the news, for an immediate deploy rather
+  # than waiting for the next poll. Optional: the schedule covers it either way.
   repository_dispatch:
     types: [keel-released]
   workflow_dispatch:
@@ -18,11 +23,52 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Decide what (if anything) to deploy, so a poll that finds nothing new costs
+  # ~15s and doesn't churn the Worker.
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.decide.outputs.deploy }}
+      version: ${{ steps.decide.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          DISPATCHED: ${{ github.event.client_payload.version }}
+        run: |
+          # The version the site is currently pinned to ("^0.79.0" -> "0.79.0").
+          installed="$(node -p "require('./package.json').dependencies['@shaferllc/keel'].replace(/^\D+/, '')")"
+
+          case "$EVENT" in
+            repository_dispatch) target="$DISPATCHED" ;;
+            schedule)            target="$(npm view @shaferllc/keel version)" ;;
+            *)                   target="$installed" ;;  # a push: deploy the site as it stands
+          esac
+
+          echo "installed=${installed} target=${target}"
+
+          # A poll that finds nothing new is not a deploy.
+          if [ "$EVENT" = "schedule" ] && [ "$target" = "$installed" ]; then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "nothing new on npm"
+            exit 0
+          fi
+
+          echo "deploy=true" >> "$GITHUB_OUTPUT"
+          echo "version=${target}" >> "$GITHUB_OUTPUT"
+
   deploy:
+    needs: check
+    if: needs.check.outputs.deploy == 'true'
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # to commit the version bump on a release dispatch
+      contents: write # to commit the version bump when it follows a release
 
     steps:
       - uses: actions/checkout@v4
@@ -35,19 +81,14 @@ jobs:
       - name: Install
         run: npm ci
 
-      # On a release dispatch, move to the version that was just published. The
-      # caret can't do this for us: for a 0.x version, ^0.79.0 means ">=0.79.0
-      # <0.80.0" — every minor needs an explicit bump.
+      # Move to the released version. The caret can't do this for us: for a 0.x
+      # version, ^0.79.0 means ">=0.79.0 <0.80.0" — every minor needs an explicit
+      # bump, which is exactly the step a human kept forgetting.
       - name: Follow the released version
-        if: github.event_name == 'repository_dispatch'
         env:
-          VERSION: ${{ github.event.client_payload.version }}
+          VERSION: ${{ needs.check.outputs.version }}
         run: |
-          if [ -z "$VERSION" ]; then
-            echo "::error::dispatch carried no version"
-            exit 1
-          fi
-          npm install "@shaferllc/keel@${VERSION}" --save --save-exact=false
+          npm install "@shaferllc/keel@${VERSION}" --save
 
           if git diff --quiet -- package.json package-lock.json; then
             echo "already on ${VERSION}"
