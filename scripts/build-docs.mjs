@@ -30,18 +30,18 @@ const version = JSON.parse(readFileSync(source.pkg, "utf8")).version;
 // Conceptual pages have no exported API and use these slugs; everything else is
 // an API guide. The ordering here drives the sidebar sections.
 const SECTIONS = [
-  { title: "Getting Started", slugs: ["getting-started"] },
+  { title: "Getting Started", slugs: ["getting-started", "starter-kits"] },
   {
     title: "The Basics",
     slugs: ["container", "providers", "configuration", "routing", "pages", "controllers", "request-response", "decorators", "middleware", "hooks", "views", "templates", "vite", "errors"],
   },
   {
     title: "Database",
-    slugs: ["database", "models", "migrations", "factories", "transformers", "api-resources"],
+    slugs: ["database", "query-builder", "orm", "models", "migrations", "factories", "transformers", "api-resources"],
   },
   {
     title: "Auth & Security",
-    slugs: ["sessions", "authentication", "accounts", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
+    slugs: ["sessions", "authentication", "accounts", "teams", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
   },
   {
     title: "Digging Deeper",
