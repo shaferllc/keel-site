@@ -28,7 +28,7 @@ const SECTIONS = [
   },
   {
     title: "Database",
-    slugs: ["database", "models", "migrations", "factories", "transformers"],
+    slugs: ["database", "models", "migrations", "factories", "transformers", "api-resources"],
   },
   {
     title: "Auth & Security",
