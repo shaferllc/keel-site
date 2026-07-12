@@ -8,6 +8,18 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.72.0",
+    date: "2026-07-11",
+    title: "A real console: typed commands, prompts, terminal UI, REPL",
+    changes: [
+      "Commands with typed arguments and flags. arg.string() gives you a string; arg.string({ required: false }) gives you string | undefined; add a default and it's a string again. The types are inferred from the spec and the parsing is generated from the same declaration, so the two can't drift apart. keel make:command scaffolds one, and anything in app/Commands is discovered automatically.",
+      "The parser handles --flag value, --flag=value, --no-flag, -f value, bundled shorthands (-lt 5), and -- passthrough. An unknown flag is an error, not a shrug — a typo'd --forse should tell you rather than silently doing nothing. Usage errors print what's wrong and the command's help, rather than a stack trace.",
+      "Terminal UI: info/success/warning/error, aligned CREATE/SKIP action lines, tables, stickers, instructions, colors, and a task runner that stops at the first failure. No dependency — ANSI codes are a dozen escape sequences, not a package.",
+      "Prompts (ask, secure, confirm, toggle, choice, multiple, autocomplete) that are testable, which is the whole point: trap the answers and buffer the output, and a command that asks questions becomes a command you can assert on. An untrapped prompt throws instead of hanging forever on stdin a test will never provide.",
+      "keel repl — an interactive shell with the application booted: the container is up, the providers have run, and db / make / cache / router are in scope. Poking at a model in a REPL is the fastest debugging loop there is.",
+    ],
+  },
+  {
     version: "0.71.0",
     date: "2026-07-11",
     title: "Pages, packages, and Watch",
