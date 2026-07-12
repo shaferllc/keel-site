@@ -8,6 +8,17 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.73.0",
+    date: "2026-07-11",
+    title: "Database transactions",
+    changes: [
+      "transaction(fn) commits when fn returns and rolls back if it throws, so two related writes either both land or neither does. Queries inside are ambient — db(), models, and relations pick up the open transaction without being handed it, because it lives in AsyncLocalStorage rather than a module global, so two concurrent requests can't steal each other's connection.",
+      "Nesting uses savepoints. A transaction() inside another doesn't open a second one — databases don't have those — it takes a savepoint, so an inner failure rolls back only the inner work and the outer transaction carries on.",
+      "The pooling trap is closed. A transaction needs every statement on one connection, but a pool hands each statement to whichever is free — so BEGIN issued through a pool wraps nothing and a failure half-writes. It looks like it works. The Postgres adapter now checks a connection out of the Pool, runs the whole transaction on it, and releases it even if the COMMIT throws.",
+      "D1 refuses honestly: it can't hold a transaction open across awaits, so transaction() throws a clear error pointing at database.batch([...]) rather than letting a BEGIN fail cryptically. A transaction that quietly isn't one is far worse than one that refuses to start.",
+    ],
+  },
+  {
     version: "0.72.0",
     date: "2026-07-11",
     title: "A real console: typed commands, prompts, terminal UI, REPL",
