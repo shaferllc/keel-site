@@ -41,7 +41,7 @@ const SECTIONS = [
   },
   {
     title: "Auth & Security",
-    slugs: ["sessions", "authentication", "accounts", "teams", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
+    slugs: ["sessions", "authentication", "accounts", "teams", "gates", "authorization", "social-auth", "hashing", "security", "cors", "rate-limiting"],
   },
   {
     title: "Digging Deeper",
