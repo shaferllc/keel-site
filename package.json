@@ -11,7 +11,7 @@
     "typecheck": "npm run docs && tsc --noEmit"
   },
   "dependencies": {
-    "@shaferllc/keel": "^0.83.7",
+    "@shaferllc/keel": "^0.83.16",
     "hono": "^4.6.14"
   },
   "devDependencies": {
