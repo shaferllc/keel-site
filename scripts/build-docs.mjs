@@ -72,8 +72,11 @@ function makeMarked() {
     link({ href, title, tokens }) {
       const text = this.parser.parseInline(tokens);
       let h = href;
-      // ./models.md#relationships -> /docs/models#relationships ; foo.md -> /docs/foo
-      const m = /^\.?\/?([\w-]+)\.md(#.*)?$/.exec(href);
+      // Cross-doc links from the keel repo take a few shapes:
+      //   models.md / ./models.md / ./docs/models.md / docs/models.md
+      //   (+ optional #anchor)
+      // All become /docs/models(#anchor) for the site.
+      const m = /^(?:\.\/)?(?:docs\/)?([\w-]+)\.md(#.*)?$/.exec(href);
       if (m) h = `/docs/${m[1]}${m[2] ?? ""}`;
       const t = title ? ` title="${title}"` : "";
       const ext = /^https?:/.test(h) ? ' target="_blank" rel="noopener"' : "";
