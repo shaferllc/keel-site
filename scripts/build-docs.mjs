@@ -33,7 +33,7 @@ const SECTIONS = [
   { title: "Getting Started", slugs: ["from-install-to-deploy", "keel-cloud", "getting-started", "starter-kits"] },
   {
     title: "The Basics",
-    slugs: ["container", "providers", "configuration", "routing", "pages", "controllers", "request-response", "decorators", "middleware", "hooks", "views", "templates", "vite", "errors"],
+    slugs: ["container", "providers", "configuration", "routing", "pages", "controllers", "request-response", "decorators", "middleware", "hooks", "views", "templates", "ui", "vite", "errors"],
   },
   {
     title: "Database",
@@ -45,7 +45,7 @@ const SECTIONS = [
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "billing", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console", "hosting"],
+    slugs: ["mail", "billing", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "flags", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console", "hosting"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture", "ai"] },
 ];
