@@ -3,6 +3,7 @@ import { config, view } from "@shaferllc/keel/core";
 import type { AppInfo } from "../config.js";
 import { HomePage } from "../views/home.js";
 import { ChangelogPage } from "../views/changelog.js";
+import { INSTALL_SH } from "../docs/generated.js";
 
 /** Serves the Keel marketing site. */
 export class SiteController {
@@ -21,5 +22,13 @@ export class SiteController {
       framework: "keel",
       version: config("app.version", "0.0.0"),
     });
+  }
+
+  /** `curl -fsSL https://keeljs.com/install.sh | bash` — MCP config installer. */
+  install(c: Ctx) {
+    c.header("Content-Type", "text/x-shellscript; charset=utf-8");
+    c.header("Cache-Control", "public, max-age=300");
+    c.header("Content-Disposition", 'inline; filename="install.sh"');
+    return c.text(INSTALL_SH);
   }
 }
