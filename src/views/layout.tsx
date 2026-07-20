@@ -148,6 +148,39 @@ const STYLES = `
   .term pre { margin: 0; padding: 1.2rem 1.4rem; overflow-x: auto; }
   .term .pr { color: #6fd39a; } .term .cm { color: #5c7a68; }
 
+  /* ---------- AI / MCP section ---------- */
+  .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .ai-grid .term { max-width: none; }
+  .ai-grid .install { display: flex; margin-top: 1rem; max-width: 100%; }
+  .ai-grid .install code { min-width: 0; overflow-x: auto; white-space: nowrap; }
+  .ai-grid .install button { flex: none; }
+
+  /* ---------- motion (skipped entirely for reduced-motion users) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .hero > div > * { opacity: 0; animation: rise .65s cubic-bezier(.2,.7,.3,1) forwards; }
+    .hero > div > *:nth-child(2) { animation-delay: .07s; }
+    .hero > div > *:nth-child(3) { animation-delay: .14s; }
+    .hero > div > *:nth-child(4) { animation-delay: .21s; }
+    .hero > div > *:nth-child(5) { animation-delay: .28s; }
+    .hero .figure { opacity: 0; animation: rise .9s .25s cubic-bezier(.2,.7,.3,1) forwards; }
+    /* the waterline drifts — dasharray is 4 3, so -28 loops cleanly */
+    svg .wl { animation: wldrift 6s linear infinite; }
+    @keyframes wldrift { to { stroke-dashoffset: -28; } }
+    /* scroll-reveal: .rv is added by script, so no-JS never hides content */
+    .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1); }
+    .rv.in { opacity: 1; transform: none; }
+  }
+
+  /* ---------- docs: heading anchors + code copy (added by script) ---------- */
+  a.anchor { margin-left: .5rem; color: var(--ink-3); opacity: 0; border-bottom: none; font-family: var(--mono); font-size: .8em; transition: opacity .12s; }
+  .doc-body h2:hover a.anchor, .doc-body h3:hover a.anchor { opacity: 1; }
+  a.anchor:hover { color: var(--accent); }
+  .doc-body pre { position: relative; }
+  .copybtn { position: absolute; top: .5rem; right: .5rem; border: 1px solid var(--rule); background: var(--paper); font-family: var(--mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); padding: .25rem .55rem; cursor: pointer; opacity: 0; transition: opacity .15s; }
+  .doc-body pre:hover .copybtn, .copybtn:focus-visible { opacity: 1; }
+  .copybtn:hover { color: var(--accent); border-color: var(--accent); }
+
   /* ---------- footer ---------- */
   footer { border-top: 1px solid var(--ink); padding: 2.6rem 0; }
   footer .row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-family: var(--mono); font-size: .78rem; color: var(--ink-3); letter-spacing: .03em; }
@@ -222,6 +255,7 @@ const STYLES = `
   .rel-body li::marker { color: var(--accent); }
 
   @media (max-width: 54rem) {
+    .ai-grid { grid-template-columns: 1fr; gap: 2rem; }
     .rel { grid-template-columns: 1fr; gap: .6rem; }
     .docs { grid-template-columns: 1fr; gap: 1.5rem; }
     .docnav { position: static; padding-bottom: 0; max-height: none; overflow-y: visible; }
@@ -291,6 +325,44 @@ const SCRIPT = `
     sync();
     mq.addEventListener('change', sync);
   }
+
+  // Scroll-reveal — classes are added here, so content never hides without JS.
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+      && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.sec-head, .spec, .bom-row, .sheet, .term, .bp-grid > *')
+      .forEach(function(el){
+        if (el.closest('.hero')) return; // hero has its own entrance
+        el.classList.add('rv');
+        io.observe(el);
+      });
+  }
+
+  // Docs: linkable headings + copy buttons on code blocks.
+  document.querySelectorAll('.doc-body h2, .doc-body h3').forEach(function(h){
+    var id = h.id || h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    if (!id) return;
+    h.id = id;
+    var a = document.createElement('a');
+    a.className = 'anchor'; a.href = '#' + id; a.textContent = '#';
+    a.setAttribute('aria-label', 'Link to this section');
+    h.appendChild(a);
+  });
+  document.querySelectorAll('.doc-body pre').forEach(function(pre){
+    var b = document.createElement('button');
+    b.className = 'copybtn'; b.type = 'button'; b.textContent = 'copy';
+    b.addEventListener('click', function(){
+      var code = pre.querySelector('code');
+      navigator.clipboard && navigator.clipboard.writeText((code || pre).innerText.replace(/\\n?$/, '\\n'));
+      b.textContent = 'copied';
+      setTimeout(function(){ b.textContent = 'copy'; }, 1100);
+    });
+    pre.appendChild(b);
+  });
 `;
 
 /** The shared top navigation, so every page's menu stays identical. */
@@ -304,6 +376,7 @@ export const SiteNav: FC<{ version: string; repo: string }> = ({ version, repo }
       <nav>
         <a class="hidesm" href="/#spec">Spec</a>
         <a class="hidesm" href="/#lifecycle">Lifecycle</a>
+        <a class="hidesm" href="/#ai">AI</a>
         <a href="/docs">Docs</a>
         <a href="/changelog">Changelog</a>
         <a class="gh" href={repo}>GitHub ↗</a>
@@ -325,7 +398,11 @@ export const Layout: FC<
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Keel" />
       {url ? <meta property="og:url" content={url} /> : null}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
       <meta name="theme-color" content="#f2ede1" />
       <link rel="icon" href={FAVICON_HREF} />
       <link rel="preconnect" href="https://fonts.googleapis.com" />

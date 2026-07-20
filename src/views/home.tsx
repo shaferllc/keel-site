@@ -190,6 +190,55 @@ export const HomePage: FC<{ app: AppInfo }> = ({ app }) => (
     </div>
 
     <div class="wrap">
+      <section id="ai">
+        <div class="sec-head">
+          <div>
+            <span class="kicker">Built for AI</span>
+            <h2>An agent at the helm, charts included.</h2>
+          </div>
+          <p>Keel is built to be written with an AI agent — the machine-facing surface is generated from the same source as these docs, so it never drifts.</p>
+        </div>
+        <div class="ai-grid">
+          <div class="specs" style="border-top-color:var(--rule)">
+            <div class="spec">
+              <div class="n">◆</div>
+              <h3>MCP server<span class="part">Docs · API · Generators</span></h3>
+              <p>Exposes the guides, the full public API surface (380+ exports), the <span class="mono">make:*</span> generators, and Keel's conventions to any MCP client.</p>
+            </div>
+            <div class="spec">
+              <div class="n">◆</div>
+              <h3>llms.txt<span class="part">Machine-readable docs</span></h3>
+              <p>Every guide, indexed at <a class="lnk" href="/llms.txt">/llms.txt</a> and inlined at <a class="lnk" href="/llms-full.txt">/llms-full.txt</a> — served from this domain, always current.</p>
+            </div>
+            <div class="spec">
+              <div class="n">◆</div>
+              <h3>Agent playbook<span class="part">AGENTS.md + guide</span></h3>
+              <p>Conventions an agent can follow without hallucinating. Start at <a class="lnk" href="/docs/ai">Building Keel apps with AI</a>.</p>
+            </div>
+          </div>
+          <div>
+            <div class="term">
+              <div class="bar2">bash — connect the MCP server</div>
+              <pre>
+<span class="cm"># one line, in your app directory</span>{"\n"}
+<span class="pr">$</span> curl -fsSL https://keeljs.com/install.sh | bash{"\n"}
+{"\n"}
+<span class="cm"># or with Cursor + Claude Code config too</span>{"\n"}
+<span class="pr">$</span> curl -fsSL https://keeljs.com/install.sh | bash -s -- --all{"\n"}
+{"\n"}
+⚓ wrote .mcp.json — your agent now knows Keel
+              </pre>
+            </div>
+            <div class="install">
+              <code><span class="sig">$</span> curl -fsSL https://keeljs.com/install.sh | bash</code>
+              <button data-copy="curl -fsSL https://keeljs.com/install.sh | bash">copy</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="wrap">
       <section id="parts">
         <div class="sec-head">
           <div>
