@@ -46,7 +46,7 @@ const SECTIONS = [
   },
   {
     title: "Digging Deeper",
-    slugs: ["mail", "billing", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "flags", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console", "hosting"],
+    slugs: ["mail", "billing", "queues", "scheduling", "notifications", "broadcasting", "broker", "events", "cache", "search", "flags", "locks", "redis", "logger", "health", "i18n", "validation", "url-builder", "static-files", "storage", "inertia", "openapi", "telemetry", "watch", "packages", "helpers", "debugging", "testing", "console", "hosting"],
   },
   { title: "Under the Hood", slugs: ["hono", "architecture", "ai"] },
 ];
